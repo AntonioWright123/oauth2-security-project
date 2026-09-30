@@ -45,7 +45,7 @@ Team members can still help each other across sections.
   Owner: ______________________
 
 - [ ] **Role 4 — OAuth Device Authorization Flow**  
-  Owner: ______________________
+  Owner: ________AJ Kozina______
 
 - [ ] **Role 5 — Security / Phishing Demonstration & Testing**  
   Owner: ______________________
@@ -80,7 +80,7 @@ This person will focus on the main OAuth server and authorization-code flow.
 
 # 2. Database, Users & OAuth Client Management
 
-**Owner:** ______________________
+**Owner:** ______AJ Kozina_____
 
 This person will manage the data required by the authorization server.
 
