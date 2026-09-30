@@ -152,7 +152,7 @@ The existing production Activito project should not be changed until the standal
 
 # 4. OAuth Device Authorization Flow
 
-**Owner:** ______________________
+**Owner:** _AJ Kozina_
 
 This person will build the device-code portion of OAuth.
 
@@ -199,7 +199,7 @@ Device receives access token
 
 # 5. Security / Phishing Demonstration & Testing
 
-**Owner:** ______________________
+**Owner:** _Sam Smith_
 
 This person will build the controlled security demonstrations and test the completed system.
 
