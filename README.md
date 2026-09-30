@@ -39,7 +39,7 @@ Team members can still help each other across sections.
   Owner: ______________________
 
 - [ ] **Role 2 — Database, Users & OAuth Client Management**  
-  Owner: ______________________
+  Owner: __________AJ Flower____________
 
 - [ ] **Role 3 — Legitimate Client Application & Frontend**  
   Owner: ______________________
