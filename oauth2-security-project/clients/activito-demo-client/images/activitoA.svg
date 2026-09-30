@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 144" role="img" aria-label="Activito">
+  <defs>
+    <linearGradient id="activitoMark" x1="0" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <!-- motion trails -->
+  <g stroke="url(#activitoMark)" stroke-width="8" stroke-linecap="round" opacity="0.75">
+    <path d="M6 52h22"/><path d="M2 78h30"/><path d="M8 104h20"/>
+  </g>
+  <!-- the A, leaning into the direction of travel -->
+  <g transform="skewX(-11) translate(16 0)">
+    <path fill="url(#activitoMark)" fill-rule="evenodd"
+          d="M56 16 96 128H78l-8-24H42l-8 24H16Zm-8 68h16l-8-26z"/>
+  </g>
+</svg>

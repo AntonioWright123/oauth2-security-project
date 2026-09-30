@@ -1,0 +1,501 @@
+/* ════════════════════════════════════════════════════════════
+   VIBE EXPERIENCE — full-screen takeover for the vibe quiz
+   The quiz is the product's centrepiece, so it gets the whole
+   viewport and a colour field that flows toward whichever vibe
+   is currently winning.
+   ════════════════════════════════════════════════════════════ */
+
+/* Registered so the colour morph between vibes can be animated.
+   Without @property a custom property flips instantly; browsers
+   that skip this still get the right colours, just no tween. */
+@property --vibe-a {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #a855f7;
+}
+
+@property --vibe-b {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #3b82f6;
+}
+
+.vibe-xp {
+    --vibe-a: #a855f7;
+    --vibe-b: #3b82f6;
+
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #05040a;
+    color: #fff;
+    transition: --vibe-a var(--duration-vibe-morph, 900ms) ease,
+                --vibe-b var(--duration-vibe-morph, 900ms) ease;
+}
+
+/* ── Entrance / exit ─────────────────────────────────────── */
+.vibe-xp {
+    animation: vibeXpIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.vibe-xp.is-closing {
+    animation: vibeXpOut 240ms ease-in both;
+}
+
+@keyframes vibeXpIn {
+    from {
+        opacity: 0;
+        transform: scale(1.03);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes vibeXpOut {
+    to {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+}
+
+/* ════════════════════════════════════════════════════════════
+   COLOUR FIELD — drifting orbs + flowing waves
+   ════════════════════════════════════════════════════════════ */
+.vibe-field {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.vibe-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    will-change: transform;
+}
+
+.vibe-orb--a {
+    width: 46vmax;
+    height: 46vmax;
+    top: -14vmax;
+    left: -10vmax;
+    background: radial-gradient(circle, var(--vibe-a), transparent 68%);
+    animation: vibeDriftA 19s ease-in-out infinite alternate;
+}
+
+.vibe-orb--b {
+    width: 40vmax;
+    height: 40vmax;
+    bottom: -12vmax;
+    right: -8vmax;
+    background: radial-gradient(circle, var(--vibe-b), transparent 68%);
+    animation: vibeDriftB 23s ease-in-out infinite alternate;
+}
+
+@keyframes vibeDriftA {
+    to {
+        transform: translate3d(12vw, 8vh, 0) scale(1.14);
+    }
+}
+
+@keyframes vibeDriftB {
+    to {
+        transform: translate3d(-14vw, -6vh, 0) scale(1.1);
+    }
+}
+
+/* Waves sit along the bottom and slide horizontally. Each path is
+   drawn twice as wide as the viewBox, so translating by exactly
+   half its width loops seamlessly. */
+.vibe-waves {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: min(46vh, 380px);
+}
+
+.vibe-wave {
+    will-change: transform;
+    animation: vibeFlow linear infinite;
+}
+
+.vibe-wave--1 {
+    fill: var(--vibe-a);
+    opacity: 0.22;
+    animation-duration: 15s;
+}
+
+.vibe-wave--2 {
+    fill: var(--vibe-b);
+    opacity: 0.2;
+    animation-duration: 21s;
+    animation-direction: reverse;
+}
+
+.vibe-wave--3 {
+    fill: var(--vibe-a);
+    opacity: 0.14;
+    animation-duration: 29s;
+}
+
+@keyframes vibeFlow {
+    to {
+        transform: translateX(-1440px);
+    }
+}
+
+/* ════════════════════════════════════════════════════════════
+   CHROME — progress rail + close
+   ════════════════════════════════════════════════════════════ */
+.vibe-xp__bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2vw, 1.75rem) clamp(1rem, 4vw, 3rem);
+}
+
+.vibe-progress {
+    display: flex;
+    flex: 1;
+    gap: 6px;
+    max-width: 34rem;
+}
+
+.vibe-progress__seg {
+    height: 4px;
+    flex: 1;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+}
+
+.vibe-progress__seg::after {
+    content: '';
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--vibe-a), var(--vibe-b));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vibe-progress__seg.is-done::after {
+    transform: scaleX(1);
+}
+
+.vibe-close {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.7);
+    transition: background var(--duration-fast, 150ms),
+                color var(--duration-fast, 150ms),
+                transform var(--duration-fast, 150ms);
+}
+
+.vibe-close:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+/* ════════════════════════════════════════════════════════════
+   STAGE
+   ════════════════════════════════════════════════════════════ */
+.vibe-stage {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 5vw, 3rem) clamp(3rem, 8vh, 6rem);
+}
+
+.vibe-step {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.75rem;
+}
+
+.vibe-q {
+    font-family: var(--font-display, 'Nunito', sans-serif);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 4.25rem);
+    max-width: 18ch;
+    margin-bottom: clamp(1.75rem, 4vh, 3rem);
+    text-wrap: balance;
+}
+
+/* ── Options ─────────────────────────────────────────────── */
+.vibe-options {
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+    .vibe-options {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+}
+
+.vibe-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    text-align: left;
+    padding: clamp(1rem, 2vw, 1.4rem) clamp(1.1rem, 2vw, 1.6rem);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    color: #fff;
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.1rem);
+    font-weight: 500;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+                background 260ms ease,
+                border-color 260ms ease;
+}
+
+.vibe-option:hover,
+.vibe-option:focus-visible {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--opt-tint, rgba(255, 255, 255, 0.4));
+    outline: none;
+}
+
+.vibe-option:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+.vibe-option:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+.vibe-option.is-picked {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: var(--opt-tint, #fff);
+}
+
+.vibe-option__icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--opt-tint, #fff);
+}
+
+/* Staggered entrance, index supplied inline as --i */
+.vibe-enter {
+    animation: vibeRise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes vibeRise {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Question leaving before the next one renders */
+.vibe-stage.is-advancing .vibe-q,
+.vibe-stage.is-advancing .vibe-step,
+.vibe-stage.is-advancing .vibe-options {
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESULT
+   ════════════════════════════════════════════════════════════ */
+.vibe-result__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.5rem;
+}
+
+.vibe-result__head {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    margin-bottom: clamp(1.75rem, 4vh, 2.75rem);
+}
+
+.vibe-result__icon {
+    color: var(--vibe-a);
+    flex-shrink: 0;
+    animation: vibePulse 3.4s ease-in-out infinite;
+}
+
+@keyframes vibePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+.vibe-result__name {
+    font-family: var(--font-display, 'Nunito', sans-serif);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-size: clamp(2.5rem, 1.2rem + 6vw, 6rem);
+    background: linear-gradient(120deg, var(--vibe-a), var(--vibe-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.vibe-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-bottom: clamp(1.75rem, 4vh, 2.5rem);
+}
+
+.vibe-row__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.vibe-row__track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.vibe-row__fill {
+    height: 100%;
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vibe-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.vibe-btn {
+    padding: 0.95rem 1.75rem;
+    border-radius: 1.25rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform var(--duration-fast, 150ms) ease, opacity var(--duration-fast, 150ms) ease;
+}
+
+.vibe-btn:hover {
+    transform: translateY(-2px);
+}
+
+.vibe-btn--primary {
+    flex: 1;
+    min-width: 15rem;
+    color: #fff;
+    border: none;
+    background: linear-gradient(120deg, var(--vibe-a), var(--vibe-b));
+}
+
+.vibe-btn--ghost {
+    color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vibe-btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+/* ════════════════════════════════════════════════════════════
+   REDUCED MOTION — keep the colour, drop the movement
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+
+    .vibe-xp,
+    .vibe-xp.is-closing,
+    .vibe-orb,
+    .vibe-wave,
+    .vibe-enter,
+    .vibe-result__icon {
+        animation: none;
+    }
+
+    .vibe-xp {
+        opacity: 1;
+        transform: none;
+    }
+
+    .vibe-enter {
+        opacity: 1;
+        transform: none;
+    }
+
+    .vibe-option:hover,
+    .vibe-option:focus-visible,
+    .vibe-btn:hover {
+        transform: none;
+    }
+
+    .vibe-stage.is-advancing .vibe-q,
+    .vibe-stage.is-advancing .vibe-step,
+    .vibe-stage.is-advancing .vibe-options {
+        transform: none;
+    }
+}

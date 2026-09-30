@@ -1,0 +1,434 @@
+/* ── Shared components (dashboard + explore) ────────────────
+   Classes rendered from JS (dashboardGrid, exploreRender, etc.)
+   as well as markup shared across app pages. */
+
+/* ── Section fade-in with stagger ── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-up {
+    animation: fadeUp var(--duration-normal) ease forwards;
+    opacity: 0;
+}
+
+.fade-up:nth-child(1) {
+    animation-delay: .05s;
+}
+
+.fade-up:nth-child(2) {
+    animation-delay: .1s;
+}
+
+.fade-up:nth-child(3) {
+    animation-delay: .15s;
+}
+
+.fade-up:nth-child(4) {
+    animation-delay: .2s;
+}
+
+.fade-up:nth-child(5) {
+    animation-delay: .25s;
+}
+
+.fade-up:nth-child(6) {
+    animation-delay: .3s;
+}
+
+/* ── Sidebar nav ── */
+.nav-item {
+    transition: background var(--duration-fast), color var(--duration-fast);
+}
+
+.nav-item.active {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+}
+
+#sidebar {
+    transition: transform 0.3s ease;
+}
+
+/* ── Card hover lift ──
+   Shadow strength is themed per page via --card-hover-shadow. */
+.spot-card,
+.activity-card {
+    transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+.spot-card:hover,
+.activity-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-shadow, 0 20px 40px rgba(0, 0, 0, 0.12));
+}
+
+/* ── Heart toggle ──
+   Heart buttons hold an SVG heart: outline by default,
+   filled with the current text color once saved. */
+.heart-btn.saved {
+    color: var(--color-red);
+}
+
+.heart-btn svg {
+    fill: none;
+}
+
+.heart-btn.saved svg {
+    fill: currentColor;
+}
+
+/* Scale pop when a heart is tapped to saved (added via popHeart()) */
+@keyframes heartPop {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.35);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.heart-btn.pop svg {
+    animation: heartPop 0.35s var(--ease-smooth);
+}
+
+/* ── Image fade-in ──
+   Card images start invisible and fade in once loaded, so grids
+   never show half-painted images popping in. */
+.img-fade {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.img-fade.loaded {
+    opacity: 1;
+}
+
+/* ── Mobile bottom nav ── */
+.bottom-nav-item {
+    color: rgba(255, 255, 255, 0.5);
+    transition: color var(--duration-fast);
+}
+
+.bottom-nav-item.active,
+.bottom-nav-item:active {
+    color: var(--color-green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .heart-btn.pop svg {
+        animation: none;
+    }
+
+    .img-fade {
+        transition: none;
+        opacity: 1;
+    }
+}
+
+/* ── Toasts ──
+   Non-blocking notifications; see shared/toast.js. */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: min(92vw, 420px);
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: rgba(20, 20, 24, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    animation: toastIn 0.25s var(--ease-smooth) both;
+}
+
+.toast-error {
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.toast-error svg {
+    color: var(--color-red);
+}
+
+.toast-success {
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+.toast-success svg {
+    color: var(--color-green);
+}
+
+.toast-info svg {
+    color: var(--color-accent);
+}
+
+.toast-out {
+    animation: toastOut 0.2s ease both;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .toast,
+    .toast-out {
+        animation: none;
+    }
+}
+
+/* ── Loading skeletons ──
+   .skeleton-block goes on each shimmering placeholder shape;
+   .skeleton-card marks a whole placeholder card so renderers
+   can sweep them out before painting real content. */
+@keyframes skeletonPulse {
+
+    0%,
+    100% {
+        opacity: .45;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.skeleton-block {
+    background: rgba(255, 255, 255, 0.08);
+    animation: skeletonPulse 1.4s ease-in-out infinite;
+}
+/* ── Detail modal entrance — flip X ──
+   Adapted from the modal-animations pen: the panel flips down from
+   edge-on with a springy overshoot. Runs on a keyframe (not a
+   transition) so it replays every time the modal's display toggles. */
+@keyframes modalFlipInX {
+    0% {
+        opacity: 0;
+        transform: perspective(900px) rotateX(70deg);
+    }
+
+    60% {
+        opacity: 1;
+        transform: perspective(900px) rotateX(-7deg);
+    }
+
+    80% {
+        transform: perspective(900px) rotateX(3deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: perspective(900px) rotateX(0);
+    }
+}
+
+.modal-flip-in {
+    animation: modalFlipInX 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    transform-origin: top center;
+    backface-visibility: hidden;
+}
+
+/* Prev/next feedback — panel slides in from the direction of travel
+   (swipe gesture or arrow click). Classes are re-applied per navigation. */
+@keyframes modalSlideFromRight {
+    from {
+        opacity: 0.35;
+        transform: translateX(44px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes modalSlideFromLeft {
+    from {
+        opacity: 0.35;
+        transform: translateX(-44px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.modal-slide-next {
+    animation: modalSlideFromRight 0.25s var(--ease-smooth) both;
+}
+
+.modal-slide-prev {
+    animation: modalSlideFromLeft 0.25s var(--ease-smooth) both;
+}
+
+/* ── Glow CTA hover ──
+   Adapted from the glow-button pen, tuned to the brand purple.
+   Add .btn-glow to primary CTAs (FAB, Vibe Check). */
+.btn-glow {
+    transition: box-shadow 0.4s ease-in-out, transform 0.2s ease;
+}
+
+.btn-glow:hover {
+    box-shadow: 0 0 35px 8px rgba(168, 85, 247, 0.55),
+        0 0 70px 18px rgba(168, 85, 247, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .modal-flip-in,
+    .modal-slide-next,
+    .modal-slide-prev {
+        animation: none;
+    }
+}
+
+/* ── Explore hero page-load reveal ──
+   Used on explore.html. This is not a modal, so it should not use
+   modalAnamations.js or overlaySlideBottom IDs. */
+@keyframes exploreHeroBottomToTop {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 36px, 0) scale(0.985);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.explore-hero-reveal {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+    animation: exploreHeroBottomToTop 0.75s var(--ease-smooth, cubic-bezier(0.22, 1, 0.36, 1)) 0.12s both;
+    will-change: opacity, transform, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .explore-hero-reveal {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        animation: none;
+    }
+}
+
+/* ── Reveal on scroll (see shared/scrollReveal.js) ── */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+    will-change: opacity, transform;
+}
+
+[data-reveal="left"] {
+    transform: translateX(-32px);
+}
+
+[data-reveal="right"] {
+    transform: translateX(32px);
+}
+
+[data-reveal="scale"] {
+    transform: scale(0.94);
+}
+
+[data-reveal].in-view {
+    opacity: 1;
+    transform: none;
+}
+
+/* Container that staggers its direct children */
+[data-reveal-children]>* {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+}
+
+[data-reveal-children].in-view>* {
+    opacity: 1;
+    transform: none;
+}
+
+[data-reveal-children].in-view>*:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+[data-reveal-children].in-view>*:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+[data-reveal-children].in-view>*:nth-child(4) {
+    transition-delay: 0.3s;
+}
+
+[data-reveal-children].in-view>*:nth-child(n+5) {
+    transition-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    [data-reveal],
+    [data-reveal-children]>* {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
