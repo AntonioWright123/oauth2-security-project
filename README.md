@@ -48,7 +48,7 @@ Team members can still help each other across sections.
   Owner: ________AJ Kozina______
 
 - [ ] **Role 5 — Security / Phishing Demonstration & Testing**  
-  Owner: ______________________
+  Owner: ________Sam Smith______________
 
 ---
 
