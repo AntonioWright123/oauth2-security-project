@@ -39,7 +39,7 @@ Team members can still help each other across sections.
   Owner: ______________________
 
 - [ ] **Role 2 — Database, Users & OAuth Client Management**  
-  Owner: __________AJ Flower____________
+  Owner: _AJ Flower_
 
 - [ ] **Role 3 — Legitimate Client Application & Frontend**  
   Owner: ______________________
@@ -80,7 +80,7 @@ This person will focus on the main OAuth server and authorization-code flow.
 
 # 2. Database, Users & OAuth Client Management
 
-**Owner:** ______AJ Kozina_____
+**Owner:** _AJ Flower_
 
 This person will manage the data required by the authorization server.
 
