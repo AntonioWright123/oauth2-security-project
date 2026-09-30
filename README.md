@@ -42,7 +42,7 @@ Team members can still help each other across sections.
   Owner: _AJ Flower_
 
 - [ ] **Role 3 — Legitimate Client Application & Frontend**  
-  Owner: ______________________
+  Owner: __Antonio Wright____________________
 
 - [ ] **Role 4 — OAuth Device Authorization Flow**  
   Owner: ________AJ Kozina______
