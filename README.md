@@ -36,7 +36,7 @@ The person assigned to a section is responsible for making sure that section wor
 Team members can still help each other across sections.
 
 - [ ] **Role 1 — OAuth Authorization Server Core**  
-  Owner: ______________________
+  Owner: **Brady McManus**
 
 - [ ] **Role 2 — Database, Users & OAuth Client Management**  
   Owner: _AJ Flower_
@@ -54,7 +54,7 @@ Team members can still help each other across sections.
 
 # 1. OAuth Authorization Server Core
 
-**Owner:** ______________________
+**Owner:** **Brady McManus**
 
 This person will focus on the main OAuth server and authorization-code flow.
 
