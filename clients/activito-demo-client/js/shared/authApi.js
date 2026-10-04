@@ -154,8 +154,10 @@ async function signInWithGoogle(callbackPath = "dashboard.html") {
 // require the canonical-host hop.	
 async function signInWithOAuthDemo(callbackPath = "dashboard.html") {
 	const callbackURL = new URL(callbackPath, window.location.href).href;
-
-	const res = await fetch(`${API_BASE}/api/auth/sign-in/oauth-demo`, {
+    // The demo server is a separate origin, so we don't need to check for
+	// canonical host like we do for Google. We just call the demo server's
+	// sign-in endpoint directly.	
+	const res = await fetch(`${OAUTH_DEMO_BASE}/api/auth/sign-in/oauth-demo`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		credentials: "include",

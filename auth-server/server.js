@@ -1,7 +1,18 @@
 // auth server.js
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+
+
+
+// Allow CORS from the demo client origin.
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true
+}));
 
 // Lets Express read JSON from POST requests
 app.use(express.json());
