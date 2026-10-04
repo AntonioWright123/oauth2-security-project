@@ -1,0 +1,440 @@
+/* ── Landing page ─────────────────────────────────────────── */
+
+/* The hero card stack rotates its lower cards and the ambient orbs are
+   deliberately oversized, so both poke past the right edge on phones.
+   That widened the document and let the page scroll sideways — which
+   reads as dead space on the right that shifts the layout. Clip it.
+   `clip` (not `hidden`) so no scroll container is created. */
+html,
+body {
+    overflow-x: clip;
+}
+
+/* ── Paper flip animation ── */
+@keyframes paperFlipOff {
+    0% {
+        transform: rotate(0deg) translateX(0) skewY(0deg);
+        opacity: 1;
+    }
+
+    40% {
+        transform: rotate(8deg) translateX(40px) skewY(-3deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: rotate(15deg) translateX(120%) skewY(-6deg);
+        opacity: 0;
+    }
+}
+
+@keyframes paperSlideIn {
+    0% {
+        transform: rotate(-5deg) translateY(20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: rotate(0deg) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Cards ease between stack positions when the order changes — this is
+   what makes the card underneath "straighten up" into the top slot
+   after a flip instead of snapping. */
+.hero-card {
+    transition: transform 480ms var(--ease-smooth);
+}
+
+.card-flip-off {
+    animation: paperFlipOff 0.55s var(--ease-smooth) forwards;
+}
+
+.card-slide-in {
+    animation: paperSlideIn var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+/* Top nav — same gradient glass as the app pages so the landing
+   reads as the same product */
+/* No banner at the top of the page — the logo and auth buttons float
+   directly over the hero. */
+#topNav {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* Sticky nav deepens and gets a stronger shadow once scrolled past hero */
+/* Once content scrolls underneath, fade in just enough glass to keep the
+   logo and buttons readable — a soft veil, not the old banner bar. */
+#stickyNav.scrolled #topNav {
+    background: rgba(8, 8, 12, 0.55);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+/* Category nav collapses on scroll */
+#categoryNav.hidden-nav {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#categoryNav {
+    /* Tall enough for the pills to wrap onto two rows on phones — at the
+       old 80px the second row ("About Activito") was clipped by the
+       overflow-hidden used for the collapse animation. Only the collapsed
+       state needs an exact height, so headroom here costs nothing. */
+    max-height: 180px;
+    opacity: 1;
+    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+}
+
+/* ── Locked-section animations ── */
+@keyframes lockFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.lock-float {
+    animation: lockFloat 3s ease-in-out infinite;
+}
+
+/* Staggered reveal — gallery.js adds .in-view when the section
+   scrolls into the viewport (delays set inline per element). */
+.locked-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+}
+
+.locked-reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ════════════════════════════════════════════════════════════
+   NAV PILLS — colour-coded glass chips under the top bar
+   ════════════════════════════════════════════════════════════ */
+.nav-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 1.1rem 0.45rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 200ms ease,
+        border-color 200ms ease,
+        background 200ms ease;
+}
+
+.nav-pill:hover {
+    transform: translateY(-2px);
+}
+
+.nav-pill__icon {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.09);
+    flex-shrink: 0;
+}
+
+/* Emerald — How it works */
+.nav-pill--emerald {
+    color: #a7f3d0;
+    border-color: rgba(52, 211, 153, 0.3);
+    background: linear-gradient(120deg, rgba(16, 185, 129, 0.18), rgba(45, 212, 191, 0.06));
+}
+
+.nav-pill--emerald .nav-pill__icon {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.18);
+}
+
+.nav-pill--emerald:hover {
+    border-color: rgba(52, 211, 153, 0.6);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+    color: #d1fae5;
+}
+
+/* Sky — Preview spots */
+.nav-pill--sky {
+    color: #bae6fd;
+    border-color: rgba(56, 189, 248, 0.3);
+    background: linear-gradient(120deg, rgba(14, 165, 233, 0.18), rgba(99, 102, 241, 0.07));
+}
+
+.nav-pill--sky .nav-pill__icon {
+    color: #38bdf8;
+    background: rgba(14, 165, 233, 0.18);
+}
+
+.nav-pill--sky:hover {
+    border-color: rgba(56, 189, 248, 0.6);
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.28);
+    color: #e0f2fe;
+}
+
+/* Amber — About */
+.nav-pill--amber {
+    color: #fde68a;
+    border-color: rgba(251, 191, 36, 0.3);
+    background: linear-gradient(120deg, rgba(245, 158, 11, 0.16), rgba(249, 115, 22, 0.06));
+}
+
+.nav-pill--amber .nav-pill__icon {
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.18);
+}
+
+.nav-pill--amber:hover {
+    border-color: rgba(251, 191, 36, 0.6);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.26);
+    color: #fef3c7;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FOOTER — links and social chips
+   ════════════════════════════════════════════════════════════ */
+.footer-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.875rem;
+    text-align: left;
+    transition: color 160ms ease, transform 160ms ease;
+}
+
+/* slide-in arrow on hover */
+.footer-link::before {
+    content: '→';
+    opacity: 0;
+    margin-right: 0.1rem;
+    color: #34d399;
+    transform: translateX(-6px);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.footer-link:hover {
+    color: #fff;
+    transform: translateX(2px);
+}
+
+.footer-link:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.social-chip {
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.social-chip:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    border-color: rgba(52, 211, 153, 0.45);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.18);
+}
+
+/* ════════════════════════════════════════════════════════════
+   HERO — modern redesign (eyebrow, headline accent, CTAs, float)
+   ════════════════════════════════════════════════════════════ */
+
+/* Eyebrow pill with a live pulsing dot */
+.hero-eyebrow {
+    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(78, 22, 200, 0.202);
+    border: 1px solid rgba(139, 52, 211, 0.25);
+    color: #886ee7;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    backdrop-filter: blur(8px);
+    width: fit-content;
+}
+
+.hero-eyebrow__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #886ee7;
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+    animation: heroPulse 2.4s ease-out infinite;
+}
+
+@keyframes heroPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+    }
+}
+
+/* Headline accent — a slowly drifting emerald→teal→purple gradient */
+.hero-accent {
+    background: linear-gradient(100deg, #34d399, #2dd4bf 40%, #a855f7 80%, #34d399);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: heroGradient 8s ease infinite;
+}
+
+@keyframes heroGradient {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Primary CTA */
+.hero-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #05130d;
+    background: linear-gradient(120deg, #34d399, #10b981 55%, #a855f7);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 200ms ease;
+}
+
+.hero-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(16, 185, 129, 0.42);
+}
+
+.hero-cta-primary:active {
+    transform: translateY(0);
+}
+
+.hero-cta-primary svg {
+    transition: transform 200ms ease;
+}
+
+.hero-cta-primary:hover svg {
+    transform: translateX(3px);
+}
+
+/* Secondary / ghost CTA */
+.hero-cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.hero-cta-ghost:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+/* Gentle float on the card stack so the hero feels alive */
+#cardStack {
+    animation: heroFloat 7s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes heroFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-14px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .lock-float {
+        animation: none;
+    }
+
+    .locked-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .hero-eyebrow__dot,
+    .hero-accent,
+    #cardStack {
+        animation: none;
+    }
+
+    .hero-card,
+    .nav-pill,
+    .footer-link,
+    .social-chip {
+        transition: none;
+    }
+
+    .nav-pill:hover,
+    .footer-link:hover,
+    .social-chip:hover {
+        transform: none;
+    }
+
+    .hero-accent {
+        background-position: 0 50%;
+    }
+
+    .hero-cta-primary:hover {
+        transform: none;
+    }
+}

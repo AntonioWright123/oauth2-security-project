@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./images/activitoA.svg">
+    <!-- Tints the browser chrome (the iOS status-bar strip, Android's toolbar)
+         to the hero's top colour, so the page reads as running to the very top
+         of the window instead of starting under a black band. -->
+    <meta name="theme-color" content="#08160f" />
+    <title>Activito</title>
+
+    <!-- Prebuilt Tailwind (see frontend/static/css/tailwind-input.css).
+         Replaces cdn.tailwindcss.com, which shipped ~398KB of JS that
+         generated this CSS in the browser on every page load. -->
+    <link rel="stylesheet" href="./css/tailwind.css">
+    <!-- Chart.js is NOT loaded here: the landing page has no chart until the
+         vibe quiz finishes, and vibeCheck.js fetches the library on demand.
+         Loading it eagerly cost every visitor ~69KB they never used. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Nunito:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/tailwind.css">
+    <link rel="stylesheet" href="./css/tokens.css">
+    <link rel="stylesheet" href="./css/shared.css">
+    <link rel="stylesheet" href="./css/landing.css">
+    <link rel="stylesheet" href="./css/vibe.css">
+    <link rel="stylesheet" href="./css/auth.css">
+</head>
+
+<!-- ============================================================
+     REPLACE everything from <body> down to the end of the
+     "Mid section Cards" div with this code.
+     Keep everything below (the "how it works" section, gallery, 
+     modals, footer, and script tags) exactly as-is.
+============================================================ -->
+
+<body class="text-white">
+
+    <div class="entire-page-wrapper">
+
+        <div class="relative min-h-screen">
+
+            <!-- Ambient glow accents, matches dashboard/explore depth without a video -->
+            <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                <!-- Wash pinned to the very top edge. The orb below is clipped at
+                     y=0 and its brightest point sits ~140px down, which left a dark
+                     strip across the top with the floating header stranded on it.
+                     This carries the colour all the way up behind the header. -->
+                <div class="absolute inset-x-0 top-0 h-80
+                            bg-gradient-to-b from-emerald-500/30 via-emerald-500/12 to-transparent">
+                </div>
+                <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-emerald-500/20 blur-[120px]">
+                </div>
+                <div class="absolute top-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-purple-600/18 blur-[120px]">
+                </div>
+                <div class="absolute bottom-0 left-1/4 w-[450px] h-[450px] rounded-full bg-amber-500/12 blur-[120px]">
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════
+                    STICKY NAV WRAPPER
+                    The whole nav sits in a sticky container.
+                    - Logo/search/auth row is always visible
+                    - Category pill row hides when you scroll past the hero
+                ════════════════════════════════════════════════════════ -->
+            <div id="stickyNav" class="fixed w-full top-0 z-50 transition-all duration-300">
+
+                <!-- ── Top row: logo · auth ──
+                     No banner bar — the logo and auth buttons float over the
+                     hero. A faint glass layer fades in on scroll (see #topNav
+                     in landing.css) so they stay legible over content. -->
+                <nav id="topNav" class="flex justify-between items-center gap-3 px-4 md:px-8 pt-4 pb-3 md:pt-5 md:pb-4 w-full
+                   transition-all duration-300">
+
+                    <!-- Logo -->
+                    <img class="h-12 md:h-16 shrink-0" src="./images/activitoLogo.svg" alt="activitoLogo" />
+
+                    
+
+                    <!-- Auth buttons -->
+                    <div class="flex gap-2 md:gap-3 shrink-0">
+                        <button id="openSignup" class="px-4 md:px-6 py-2 rounded-full text-sm md:text-base font-semibold
+                       text-emerald-300 border border-emerald-400/60 backdrop-blur-xl bg-black/20
+                       hover:bg-emerald-400/10 hover:border-emerald-400 transition">
+                            Sign Up
+                        </button>
+                        <button id="openSignin" class="px-4 md:px-6 py-2 rounded-full text-sm md:text-base font-semibold text-white
+                       bg-gradient-to-r from-emerald-600 via-teal-500 to-purple-600
+                       shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 transition">
+                            Sign In
+                        </button>
+                    </div>
+                </nav>
+
+                <!-- ── Category pill row — fades out on scroll ──
+                     Pulled up tight under the floating logo row. -->
+                <nav id="categoryNav" class="flex gap-2 md:gap-3 justify-center px-4 -mt-1 pb-2 flex-wrap
+                   transition-all duration-500 overflow-hidden">
+
+                    <!-- Informational links — the landing page tells you about
+                         Activito; the real category browsing lives in the app. -->
+                    <a href="#how-it-works" class="nav-pill nav-pill--emerald">
+                        <span class="nav-pill__icon">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16 2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </span>
+                        How it works
+                    </a>
+                    <a href="#gallery" class="nav-pill nav-pill--sky">
+                        <span class="nav-pill__icon">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m15.5 8.5-2.3 5.7-5.7 2.3 2.3-5.7 5.7-2.3z" />
+                            </svg>
+                        </span>
+                        Preview spots
+                    </a>
+                    <a href="#about" class="nav-pill nav-pill--amber">
+                        <span class="nav-pill__icon">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9" />
+                                <path stroke-linecap="round" d="M12 16v-4m0-4h.01" />
+                            </svg>
+                        </span>
+                        About Activito
+                    </a>
+                </nav>
+            </div><!-- /stickyNav -->
+
+
+            <!-- ═══════════════════════════════════════════════════════
+             HERO: Text left + Card stack right
+        ════════════════════════════════════════════════════════ -->
+            <!-- No top MARGIN here: with no border/padding on the ancestors it
+                 collapsed straight out to <body>, pushing the whole page down
+                 and leaving a bare strip of canvas above the gradient. Padding
+                 does the same spacing job without escaping. -->
+            <div class="pt-52 md:pt-44 px-4 md:px-0">
+                <section class="relative flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16 lg:gap-28 pb-16">
+
+                    <!-- Left: headline text -->
+                    <div id="heroHeadline"
+                        class="flex flex-col text-white z-10 px-4 md:px-12 lg:px-16 py-8 md:py-10 text-center md:text-left max-w-2xl mx-auto md:mx-0">
+
+                        <!-- Eyebrow -->
+                        <span data-reveal="up"
+                            class="hero-eyebrow self-center md:self-start inline-flex items-center gap-2 mb-6">
+                            <span class="hero-eyebrow__dot"></span>
+                            Things to do near you
+                        </span>
+
+                        <!-- Headline — a location-forward "brief saying" -->
+                        <!-- Fluid size, not fixed steps: the lines are whitespace-nowrap, so a
+                             font too large for the screen pushes the whole page wider and makes
+                             it scroll sideways. clamp() keeps the longest line inside the column
+                             at every width. -->
+                        <h1 class="font-display font-black leading-[0.98] tracking-tight"
+                            style="font-size: clamp(2rem, 1rem + 7.2vw, 4.25rem);">
+                            <span data-reveal="up" data-reveal-delay="60" class="block whitespace-nowrap">The city has</span>
+                            <span data-reveal="up" data-reveal-delay="150" class="block whitespace-nowrap hero-accent">more to do</span>
+                            <span data-reveal="up" data-reveal-delay="240" class="block whitespace-nowrap">than you think.</span>
+                        </h1>
+
+                        <!-- Brief saying / value line -->
+                        <p data-reveal="up" data-reveal-delay="340"
+                            class="mt-6 text-lg md:text-xl text-white/70 leading-relaxed max-w-lg mx-auto md:mx-0">
+                            Take the 60-second vibe check and Activito surfaces real places around you
+                            that match your mood — not whatever ranks highest.
+                        </p>
+
+                        <!-- CTAs -->
+                        <div data-reveal="up" data-reveal-delay="440"
+                            class="mt-8 flex flex-col sm:flex-row items-center gap-3 justify-center md:justify-start">
+                            <button type="button" onclick="document.getElementById('openSignup').click()"
+                                class="hero-cta-primary">
+                                Get started — it's free
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6" />
+                                </svg>
+                            </button>
+                            <a href="#how-it-works" class="hero-cta-ghost">See how it works</a>
+                        </div>
+
+                        <!-- Trust line -->
+                        <p data-reveal="up" data-reveal-delay="540"
+                            class="mt-5 text-xs text-[#886ee7] text-center md:text-left">
+                            Free to join · No credit card · Takes 60 seconds
+                        </p>
+                    </div>
+
+                    <!-- Right: card stack with paper-flip effect -->
+                    <!-- 
+                                        HOW THE FLIP WORKS:
+                                        - #cardStack holds an array of "cards" in JS (heroCards[])
+                                        - Each card is absolutely positioned; the top one is z-30
+                                        - Green arrow button calls flipCard(), which animates the top
+                                            card flying off to the right like a piece of paper being turned,
+                                            then shows the next card underneath
+                                -->
+                    <div id="cardStack" data-reveal="scale" data-reveal-delay="250" class="relative w-full max-w-[400px] md:w-[560px] md:max-w-none
+                     h-[500px] md:h-[650px] mx-auto md:mr-28 shrink-0">
+
+                        <!-- Cards are injected by heroCards.js below -->
+
+                    </div>
+
+                </section>
+            </div>
+
+        </div><!-- /relative min-h-screen -->
+
+
+
+
+
+
+        <!--How activito works-->
+
+        <section id="how-it-works" class="min-h-[60vh] border-t border-white/10 px-6 py-20">
+
+            <div class="max-w-6xl mx-auto">
+
+                <!-- Section Header -->
+                <div data-reveal="up" class="text-center mb-14">
+                    <p class="text-lg font-semibold text-emerald-400 uppercase tracking-widest">
+                        How Activito Works
+                    </p>
+
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mt-3">
+                        Discover activities built for you.
+                    </h2>
+
+                    <p class="text-white/60 max-w-2xl mx-auto mt-4 text-lg">
+                        Take a quick vibe check, let Activito learn what you're in the mood for,
+                        and get matched with local spots that fit your energy.
+                    </p>
+                </div>
+
+                <!-- Steps -->
+                <div data-reveal-children class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <!-- Step 1 — emerald -->
+                    <div class="relative overflow-hidden rounded-3xl border border-emerald-400/20 backdrop-blur-xl p-8
+                                bg-gradient-to-br from-emerald-600/25 via-[#131318]/60 to-teal-500/10
+                                hover:-translate-y-1.5 hover:border-emerald-400/45
+                                hover:shadow-[0_18px_44px_rgba(16,185,129,0.28)]
+                                transition-all duration-300">
+                        <div class="absolute -top-12 -right-10 w-44 h-44 rounded-full bg-emerald-600/25 blur-[60px] pointer-events-none"></div>
+                        <div class="relative flex items-start justify-between">
+                            <div
+                                class="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl font-display font-black shadow-lg shadow-emerald-500/30">
+                                1
+                            </div>
+                            <div>
+                                <img src="./images/brain-svgrepo-com.svg"
+                                    class="h-16 w-auto brightness-0 invert opacity-90 drop-shadow-[0_0_14px_rgba(16,185,129,0.6)]"
+                                    alt="Vibe check icon">
+                            </div>
+                        </div>
+
+                        <h3 class="relative text-2xl font-display font-bold text-white mt-6">
+                            Take the vibe check
+                        </h3>
+
+                        <p class="text-white/60 mt-3">
+                            Answer a few quick questions about your mood, energy, interests,
+                            and who you're going out with.
+                        </p>
+
+                        <p class="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300/80 uppercase tracking-widest">
+                            60 seconds
+                        </p>
+                    </div>
+
+                    <!-- Step 2 — sky -->
+                    <div class="relative overflow-hidden rounded-3xl border border-sky-400/20 backdrop-blur-xl p-8
+                                bg-gradient-to-br from-sky-500/25 via-[#131318]/60 to-indigo-500/10
+                                hover:-translate-y-1.5 hover:border-sky-400/45
+                                hover:shadow-[0_18px_44px_rgba(14,165,233,0.28)]
+                                transition-all duration-300">
+                        <div class="absolute -top-12 -right-10 w-44 h-44 rounded-full bg-sky-500/25 blur-[60px] pointer-events-none"></div>
+
+                        <div class="relative flex items-start justify-between">
+                            <div
+                                class="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white text-2xl font-display font-black shadow-lg shadow-sky-500/30">
+                                2
+                            </div>
+                            <div>
+                                <img src="./images/sparks.svg"
+                                    class="h-16 w-auto brightness-0 invert opacity-90 drop-shadow-[0_0_14px_rgba(14,165,233,0.6)]"
+                                    alt="Match icon">
+                            </div>
+                        </div>
+
+                        <h3 class="relative text-2xl font-display font-bold text-white mt-6">
+                            Get matched
+                        </h3>
+
+                        <p class="text-white/60 mt-3">
+                            Activito uses your answers to match you with experiences that fit
+                            your personality, pace, and current mood.
+                        </p>
+
+                        <p class="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300/80 uppercase tracking-widest">
+                            Tuned to your vibe
+                        </p>
+                    </div>
+
+                    <!-- Step 3 — amber -->
+                    <div class="relative overflow-hidden rounded-3xl border border-amber-400/20 backdrop-blur-xl p-8
+                                bg-gradient-to-br from-amber-500/20 via-[#131318]/60 to-orange-500/10
+                                hover:-translate-y-1.5 hover:border-amber-400/45
+                                hover:shadow-[0_18px_44px_rgba(245,158,11,0.26)]
+                                transition-all duration-300">
+                        <div class="absolute -top-12 -right-10 w-44 h-44 rounded-full bg-amber-500/20 blur-[60px] pointer-events-none"></div>
+
+                        <div class="relative flex items-start justify-between">
+                            <div
+                                class="h-14 w-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white text-2xl font-display font-black shadow-lg shadow-amber-500/30">
+                                3
+                            </div>
+                            <div>
+                                <img src="./images/binoculars.svg"
+                                    class="h-16 w-auto brightness-0 invert opacity-90 drop-shadow-[0_0_14px_rgba(245,158,11,0.6)]"
+                                    alt="Explore icon">
+                            </div>
+                        </div>
+
+                        <h3 class="relative text-2xl font-display font-bold text-white mt-6">
+                            Explore like a local
+                        </h3>
+
+                        <p class="text-white/60 mt-3">
+                            Find restaurants, hidden gems, activities, and spots around your city
+                            that feel made for your day.
+                        </p>
+
+                        <p class="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-300/80 uppercase tracking-widest">
+                            Real places near you
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        <!--Section Anamations-->
+        <section class="bg-black overflow-hidden w-full">
+            <img src="./images/moveingWave.svg" class="w-full h-32 block" alt="movingWave">
+        </section>
+
+        <!--Trending now Section-->
+        <section id="gallery" class="px-6 py-24">
+
+            <div class="max-w-7xl mx-auto">
+
+                <!-- Header -->
+                <div data-reveal="up" class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+                    <div>
+                        <p class="text-sm font-semibold text-amber-400 uppercase tracking-widest">
+                            Trending Now
+                        </p>
+
+                        <h2 class="text-4xl md:text-5xl font-bold text-white mt-3">
+                            What's going on around you
+                        </h2>
+
+                        <p class="text-white/60 mt-4 max-w-2xl text-lg">
+                            Explore popular local spots, social hangouts, food gems, and relaxing places people are
+                            loving right now.
+                        </p>
+                    </div>
+
+                    <button type="button" onclick="document.getElementById('openSignup').click()"
+                        class="hero-cta-ghost shrink-0">
+                        View all →
+                    </button>
+                </div>
+
+
+                <!-- Gallery -->
+                <div class="gallery-section-wrapper">
+                    <!-- gallery.js renders everything here -->
+                </div>
+
+            </div>
+
+        </section>
+        <!-- ═══════════════════════════════════════════════════════
+             AUTH — full-screen takeover, one per flow.
+             Icons and the password reveal are injected by
+             authModals.js so the markup stays readable.
+        ════════════════════════════════════════════════════════ -->
+
+        <!-- ── Sign In ─────────────────────────────────────────── -->
+        <div id="signinModal" class="auth-xp" hidden>
+
+            <aside class="auth-brand">
+                <div class="auth-brand__orb auth-brand__orb--a" aria-hidden="true"></div>
+                <div class="auth-brand__orb auth-brand__orb--b" aria-hidden="true"></div>
+
+                <div class="auth-brand__inner">
+                    <img src="./images/activitoLogo.svg" class="h-16" alt="Activito">
+                </div>
+
+                <div class="auth-brand__inner">
+                    <h2 class="auth-brand__headline">Your city, <em>tuned to you</em>.</h2>
+                    <p class="auth-brand__sub">
+                        Pick up where you left off — your saved spots, your vibe, and today's pick
+                        are waiting.
+                    </p>
+                </div>
+
+                <div class="auth-proof">
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="sparkles"></span>
+                        A vibe profile that actually changes what you see
+                    </div>
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="pin"></span>
+                        Real places near you, not a generic list
+                    </div>
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="heart"></span>
+                        Save anything and find it on any device
+                    </div>
+                </div>
+            </aside>
+
+            <main class="auth-panel">
+                <button type="button" class="closeModal auth-close" aria-label="Close"
+                    data-icon="close"></button>
+
+                <div class="auth-panel__inner">
+                    <div class="auth-tabs" role="tablist">
+                        <button type="button" class="switchToSignIn auth-tab is-active" role="tab">Sign In</button>
+                        <button type="button" class="switchToSignUp auth-tab" role="tab">Sign Up</button>
+                    </div>
+
+                    <h1 class="auth-title">Welcome back</h1>
+                    <p class="auth-sub">Sign in and keep exploring Activito.</p>
+
+                    <form id="signinForm" novalidate>
+                        <div class="auth-field">
+                            <label class="auth-label" for="signinEmail">Email</label>
+                            <span class="auth-field__icon" data-icon="mail"></span>
+                            <input id="signinEmail" name="email" type="email" autocomplete="email"
+                                class="auth-input" placeholder="you@example.com" required>
+                        </div>
+
+                        <div class="auth-field" data-reveal-field>
+                            <label class="auth-label" for="signinPassword">Password</label>
+                            <span class="auth-field__icon" data-icon="lock"></span>
+                            <input id="signinPassword" name="password" type="password"
+                                autocomplete="current-password"
+                                class="auth-input auth-input--reveal" placeholder="Your password" required>
+                        </div>
+
+                        <div class="auth-meta">
+                            <label class="auth-check">
+                                <input type="checkbox" class="accent-emerald-500"> Remember me
+                            </label>
+                            <a href="#" class="auth-link">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="auth-submit">Dive in</button>
+                    </form>
+
+                    <div class="auth-divider" data-google-divider hidden><span>Or continue with</span></div>
+
+                    <button type="button" data-google-signin class="auth-oauth hidden">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#4285F4"
+                                d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9z" />
+                            <path fill="#34A853"
+                                d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z" />
+                            <path fill="#FBBC05"
+                                d="M5.4 14.4a7.2 7.2 0 0 1 0-4.6V6.7H1.4a12 12 0 0 0 0 10.8l4-3.1z" />
+                            <path fill="#EA4335"
+                                d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0A12 12 0 0 0 1.4 6.7l4 3.1C6.3 6.9 8.9 4.8 12 4.8z" />
+                        </svg>
+                        Continue with Google
+                    </button>
+                    
+                    <!-- Demo OAuth button, only shown in the demo client -->
+                    <button type=button id="oauth-demo-btn" class="auth-oauth">
+                        
+                            Continue with OAuth (demo)
+
+                    </button>
+
+                    <p class="auth-swap">
+                        New here?
+                        <button type="button" class="switchToSignUp auth-link">Create an account</button>
+                    </p>
+                </div>
+            </main>
+        </div>
+
+        <!-- ── Sign Up ─────────────────────────────────────────── -->
+        <div id="signupModal" class="auth-xp" hidden>
+
+            <aside class="auth-brand">
+                <div class="auth-brand__orb auth-brand__orb--a" aria-hidden="true"></div>
+                <div class="auth-brand__orb auth-brand__orb--b" aria-hidden="true"></div>
+
+                <div class="auth-brand__inner">
+                    <img src="./images/activitoLogo.svg" class="h-16" alt="Activito">
+                </div>
+
+                <div class="auth-brand__inner">
+                    <h2 class="auth-brand__headline">Stop scrolling. <em>Start going.</em></h2>
+                    <p class="auth-brand__sub">
+                        Take the vibe check once and Activito keeps surfacing places that fit —
+                        not whatever ranks highest.
+                    </p>
+                </div>
+
+                <div class="auth-proof">
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="bolt"></span>
+                        Free to join, no card needed
+                    </div>
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="compass"></span>
+                        Built around what you actually like doing
+                    </div>
+                    <div class="auth-proof__item">
+                        <span class="auth-proof__icon" data-icon="star"></span>
+                        Fresh picks every single day
+                    </div>
+                </div>
+            </aside>
+
+            <main class="auth-panel">
+                <button type="button" class="closeModal auth-close" aria-label="Close"
+                    data-icon="close"></button>
+
+                <div class="auth-panel__inner">
+                    <div class="auth-tabs" role="tablist">
+                        <button type="button" class="switchToSignIn auth-tab" role="tab">Sign In</button>
+                        <button type="button" class="switchToSignUp auth-tab is-active" role="tab">Sign Up</button>
+                    </div>
+
+                    <h1 class="auth-title">Create your account</h1>
+                    <p class="auth-sub">Takes about thirty seconds.</p>
+
+                    <form id="signupForm" novalidate>
+                        <div class="auth-row">
+                            <div class="auth-field">
+                                <label class="auth-label" for="signupFirstName">First name</label>
+                                <input id="signupFirstName" name="firstName" type="text"
+                                    autocomplete="given-name"
+                                    class="auth-input auth-input--plain" placeholder="Alex" required>
+                            </div>
+                            <div class="auth-field">
+                                <label class="auth-label" for="signupLastName">Last name</label>
+                                <input id="signupLastName" name="lastName" type="text"
+                                    autocomplete="family-name"
+                                    class="auth-input auth-input--plain" placeholder="Rivera">
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label class="auth-label" for="signupEmail">Email</label>
+                            <span class="auth-field__icon" data-icon="mail"></span>
+                            <input id="signupEmail" name="email" type="email" autocomplete="email"
+                                class="auth-input" placeholder="you@example.com" required>
+                        </div>
+
+                        <div class="auth-field">
+                            <label class="auth-label" for="signupDob">Date of birth</label>
+                            <span class="auth-field__icon" data-icon="cake"></span>
+                            <input id="signupDob" name="dateOfBirth" type="date"
+                                autocomplete="bday" class="auth-input" required>
+                        </div>
+                        <p class="auth-hint">Used to tailor suggestions to your age. Never shown on your profile.</p>
+
+                        <div class="auth-field" data-reveal-field>
+                            <label class="auth-label" for="signupPassword">Password</label>
+                            <span class="auth-field__icon" data-icon="lock"></span>
+                            <input id="signupPassword" name="password" type="password"
+                                autocomplete="new-password"
+                                class="auth-input auth-input--reveal" placeholder="At least 8 characters" required>
+                        </div>
+
+                        <div class="auth-field" data-reveal-field>
+                            <label class="auth-label" for="signupConfirm">Confirm password</label>
+                            <span class="auth-field__icon" data-icon="lock"></span>
+                            <input id="signupConfirm" name="confirmPassword" type="password"
+                                autocomplete="new-password"
+                                class="auth-input auth-input--reveal" placeholder="Re-enter your password" required>
+                        </div>
+
+                        <label class="auth-terms">
+                            <input type="checkbox" class="mt-0.5 accent-emerald-500">
+                            <span>I agree to Activito's <a href="#" class="auth-link">Terms</a> and
+                                <a href="#" class="auth-link">Privacy Policy</a></span>
+                        </label>
+
+                        <button type="submit" class="auth-submit">Create account</button>
+                    </form>
+
+                    <div class="auth-divider" data-google-divider hidden><span>Or continue with</span></div>
+
+                    <button type="button" data-google-signin class="auth-oauth hidden">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#4285F4"
+                                d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9z" />
+                            <path fill="#34A853"
+                                d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z" />
+                            <path fill="#FBBC05"
+                                d="M5.4 14.4a7.2 7.2 0 0 1 0-4.6V6.7H1.4a12 12 0 0 0 0 10.8l4-3.1z" />
+                            <path fill="#EA4335"
+                                d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0A12 12 0 0 0 1.4 6.7l4 3.1C6.3 6.9 8.9 4.8 12 4.8z" />
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <p class="auth-swap">
+                        Already have an account?
+                        <button type="button" class="switchToSignIn auth-link">Sign in</button>
+                    </p>
+                </div>
+            </main>
+        </div>
+
+
+        <!-- Floating Vibe Check Button -->
+
+        <div id="vibeButton" class="btn-glow fixed right-4 bottom-6 md:right-6 md:bottom-8 z-50 hidden
+                                        flex items-center gap-2
+                                        pl-1.5 pr-4 py-1.5 rounded-full
+                                        border border-white/25
+                                        bg-gradient-to-r
+                                        from-yellow-500
+                                        via-purple-500
+                                        to-orange-500
+                                        shadow-[0_6px_22px_rgba(168,85,247,0.45)]
+                                        hover:scale-105 active:scale-95 transition cursor-pointer">
+
+            <!-- Logo -->
+            <div class="flex items-center justify-center
+                w-9 h-9 rounded-full bg-black shrink-0">
+
+                <img src="./images/activitoA.svg" class="w-5 h-5 object-contain" alt="">
+
+            </div>
+
+            <!-- Button text -->
+            <span class="font-bold text-white text-sm whitespace-nowrap">Vibe Check</span>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    </div>
+
+    <!-- ACTIVITO DETAIL POPUP — same shared modal as dashboard/explore -->
+
+    <div id="detailModal" class="fixed inset-0 z-[999] hidden items-end sm:items-center justify-center bg-black/70 backdrop-blur-md">
+        <div class="relative z-10 w-full max-w-2xl flex items-center justify-center sm:px-4">
+
+            <button id="leftArrow" class="absolute left-2 md:-left-16 top-1/2 -translate-y-1/2
+         h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/50 md:bg-white/10 backdrop-blur-xl border border-white/20
+         text-white text-2xl md:text-3xl flex items-center justify-center
+         hover:bg-white/20 transition z-20">‹</button>
+
+            <button id="rightArrow" class="absolute right-2 md:-right-16 top-1/2 -translate-y-1/2
+         h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/50 md:bg-white/10 backdrop-blur-xl border border-white/20
+         text-white text-2xl md:text-3xl flex items-center justify-center
+         hover:bg-white/20 transition z-20">›</button>
+
+            <div class="modal-flip-in relative w-full max-h-[92vh] overflow-y-auto modal-scroll
+            rounded-t-[2rem] rounded-b-none sm:rounded-[2.5rem] bg-[#0a0a0f]/[0.97] backdrop-blur-3xl
+            border border-purple-400/30 shadow-2xl shadow-purple-500/15 p-4 pb-10 sm:p-5">
+
+                <button id="closeModalDetail" class="absolute top-5 right-5 h-9 w-9 rounded-full bg-white/10
+           text-white text-lg flex items-center justify-center hover:bg-white/20 transition">✕</button>
+
+                <div class="flex items-center gap-3 mb-4 pr-12">
+                    <div>
+                        <p class="text-xs text-purple-400 font-semibold uppercase tracking-wider">Activito</p>
+                        <h1 class="text-2xl font-display font-black text-white">Name</h1>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 grid-rows-2 gap-1.5 rounded-2xl overflow-hidden h-48 sm:h-64 md:h-80 mb-4">
+                    <div class="overflow-hidden"><img class="modal-img img-fade w-full h-full object-cover" src="" alt=""></div>
+                    <div class="overflow-hidden"><img class="modal-img img-fade w-full h-full object-cover" src="" alt=""></div>
+                    <div class="overflow-hidden"><img class="modal-img img-fade w-full h-full object-cover" src="" alt=""></div>
+                    <div class="overflow-hidden"><img class="modal-img img-fade w-full h-full object-cover" src="" alt=""></div>
+                </div>
+
+                <div
+                    class="rounded-2xl bg-black/50 border border-emerald-400/30 p-5 space-y-3">
+                    <!-- Quick stats -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="rounded-2xl bg-black/40 border border-purple-400/25 px-2 py-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5 text-amber-400">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 0 0 .95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 0 0-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 0 0-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 0 0-.363-1.118L2.98 10.1c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 0 0 .951-.69l1.519-4.674z" />
+                                </svg>
+                                <span class="modal-rating text-white font-display font-black text-base">-</span>
+                            </div>
+                            <p class="text-[11px] uppercase tracking-widest text-white/50 mt-1">Rating</p>
+                        </div>
+                        <div class="rounded-2xl bg-black/40 border border-purple-400/25 px-2 py-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5 text-green-400">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-5 5a2 2 0 0 1-2.828 0l-7-7A1.994 1.994 0 0 1 3 12V7a4 4 0 0 1 4-4z" />
+                                </svg>
+                                <span class="modal-price text-white font-display font-black text-base">-</span>
+                            </div>
+                            <p class="text-[11px] uppercase tracking-widest text-white/50 mt-1">Price</p>
+                        </div>
+                        <div class="rounded-2xl bg-black/40 border border-purple-400/25 px-2 py-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5 text-blue-400">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.657 16.657 13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                </svg>
+                                <span class="modal-distance text-white font-display font-black text-base">-</span>
+                            </div>
+                            <p class="text-[11px] uppercase tracking-widest text-white/50 mt-1">Distance</p>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="modal-tags flex gap-2 flex-wrap"></div>
+                    <p class="modal-rawTypes text-white/35 text-xs"></p>
+
+                    <!-- Detail rows -->
+                    <div class="space-y-2">
+                        <div class="modal-row-address flex items-center gap-3 rounded-xl bg-black/40 border border-emerald-400/20 px-3.5 py-2.5 transition-colors hover:border-emerald-400/45 hover:bg-black/60">
+                            <span
+                                class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.657 16.657 13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                </svg>
+                            </span>
+                            <span class="modal-address text-white/80 text-sm min-w-0"></span>
+                        </div>
+                        <div class="modal-row-hours flex items-center gap-3 rounded-xl bg-black/40 border border-emerald-400/20 px-3.5 py-2.5 transition-colors hover:border-emerald-400/45 hover:bg-black/60">
+                            <span
+                                class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                                </svg>
+                            </span>
+                            <span class="modal-hours text-white/80 text-sm min-w-0"></span>
+                        </div>
+                        <div class="modal-row-phone flex items-center gap-3 rounded-xl bg-black/40 border border-emerald-400/20 px-3.5 py-2.5 transition-colors hover:border-emerald-400/45 hover:bg-black/60">
+                            <span
+                                class="w-8 h-8 rounded-lg bg-green-500/20 text-green-300 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 7V5z" />
+                                </svg>
+                            </span>
+                            <span class="modal-phone text-white/80 text-sm min-w-0"></span>
+                        </div>
+                        <div class="modal-row-website flex items-center gap-3 rounded-xl bg-black/40 border border-emerald-400/20 px-3.5 py-2.5 transition-colors hover:border-emerald-400/45 hover:bg-black/60">
+                            <span
+                                class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
+                                </svg>
+                            </span>
+                            <span class="modal-website text-white/80 text-sm min-w-0 truncate"></span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <button class="modal-directions-btn inline-flex items-center justify-center gap-2 py-3 rounded-xl
+                            bg-green-500 text-black font-bold text-sm hover:bg-green-400 transition">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17.657 16.657 13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            </svg>
+                            Directions</button>
+                        <button class="modal-website-btn inline-flex items-center justify-center gap-2 py-3 rounded-xl
+                            bg-purple-500/15 border border-purple-400/40 text-purple-200 font-bold text-sm
+                            hover:bg-purple-500/25 hover:border-purple-400/70 hover:text-white transition">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
+                            </svg>
+                            Website</button>
+                    </div>
+                    <div class="rounded-xl bg-white/8 p-4">
+                        <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1 inline-flex items-center gap-1">
+                            Why Activito picked this
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16 2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </p>
+                        <p class="modal-description text-white/70 text-sm leading-relaxed"></p>
+                    </div>
+                    <button id="modalSaveBtn" class="heart-btn w-full py-3.5 rounded-xl bg-white/10 border border-white/15
+             text-white font-bold text-sm hover:bg-white/20 transition
+             inline-flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
+                        </svg>
+                        Save this spot
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="about" class="bg-black border-t border-white/10 text-white px-8 py-16 rounded-t-[50px]">
+
+        <div class="max-w-7xl mx-auto">
+
+            <div data-reveal-children class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                <!-- Brand -->
+                <div>
+
+                    <img src="./images/activitoLogo.svg" class="h-16 mb-4" alt="logo">
+
+                    <p class="text-white/60 leading-relaxed">
+                        Discover your city through your interests.
+                        Find local experiences tailored to your vibe.
+                    </p>
+
+                </div>
+
+                <!-- Activito -->
+                <div>
+
+                    <h3 class="font-display font-bold text-xl mb-5">
+                        Activito
+                    </h3>
+
+                    <div class="flex flex-col items-start gap-1 text-white/55 text-sm">
+
+                        <a href="#how-it-works" class="footer-link">About Activito</a>
+                        <a href="#gallery" class="footer-link">Preview spots</a>
+                        <!-- buttons, not <a href="">: an empty href reloads the page.
+                             Swap to real <a> tags when these pages exist. -->
+                        <button type="button" class="footer-link">Privacy</button>
+                        <button type="button" class="footer-link">Contact</button>
+
+                    </div>
+
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+
+                    <h3 class="font-display font-bold text-xl mb-5">
+                        Stay Connected
+                    </h3>
+
+                    <p class="text-white/45 text-sm mb-4 leading-relaxed">
+                        New spots, new features, no spam — just the good stuff, occasionally.
+                    </p>
+
+                    <div class="flex gap-2 p-1.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xl
+                                focus-within:border-emerald-400/60 focus-within:ring-2 focus-within:ring-emerald-400/20 transition">
+
+                        <span class="self-center pl-3 text-white/35">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="14" rx="2" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m3.5 6.5 8.5 6 8.5-6" />
+                            </svg>
+                        </span>
+
+                        <input class="flex-1 min-w-0 bg-transparent px-2 py-2.5 text-sm text-white placeholder:text-white/35 outline-none"
+                            type="email" placeholder="you@example.com">
+
+                        <button type="button" class="shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold text-white
+                                       bg-gradient-to-r from-emerald-600 via-teal-500 to-purple-600
+                                       shadow-lg shadow-emerald-500/20 transition-all
+                                       hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0">
+                            Join
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Bottom -->
+            <div class="mt-14 pt-8 border-t border-white/10
+                        flex flex-col md:flex-row justify-between items-center">
+
+                <p class="text-white/40 text-sm">
+                    © 2026 Activito. All rights reserved.
+                </p>
+
+                <div class="flex gap-2.5 mt-4 md:mt-0">
+
+                    <!-- buttons until real profiles exist — empty hrefs reload the page -->
+                    <button type="button" class="social-chip">Instagram</button>
+                    <button type="button" class="social-chip">X</button>
+                    <button type="button" class="social-chip">TikTok</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+    <script defer src="./js/shared/config.js"></script>
+    <script defer src="./js/shared/icons.js"></script>
+    <script defer src="./js/shared/toast.js"></script>
+    <script defer src="./js/shared/scrollReveal.js"></script>
+    <script defer src="./js/shared/authApi.js"></script>
+    <script defer src="./js/landing/authModals.js"></script>
+    <script defer src="./js/landing/heroCardFlip.js"></script>
+    <script defer src="./js/shared/savedSpots.js"></script>
+    <script defer src="./js/shared/detailModal.js"></script>
+    <script defer src="./js/landing/gallery.js"></script>
+    <script defer src="./js/shared/vibeData.js"></script>
+    <script defer src="./js/shared/vibeCalculator.js"></script>
+    <script defer src="./js/shared/vibeExperience.js"></script>
+    <script defer src="./js/landing/vibeCheck.js"></script>
+
+
+
+</body>
+
+</html>
