@@ -86,14 +86,14 @@ This person will manage the data required by the authorization server.
 
 ## Tasks
 
-- [ ] Choose database system
-- [ ] Set up database connection
-- [ ] Create users table
-- [ ] Create OAuth clients table
-- [ ] Create authorization codes table
-- [ ] Create access tokens table
-- [ ] Create consent records table
-- [ ] Create device codes table
+- [x] Choose database system
+- [x] Set up database connection
+- [x] Create users table
+- [x] Create OAuth clients table
+- [x] Create authorization codes table
+- [x] Create access tokens table
+- [x] Create consent records table
+- [x] Create device codes table
 - [ ] Store registered client IDs
 - [ ] Store approved redirect URIs
 - [ ] Store OAuth scopes
