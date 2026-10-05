@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OAuth Demo - Sign In</title>
+
+    <link rel="stylesheet" href="/css/auth-server.css" />
+  </head>
+
+  <body>
+    <main class="login-card">
+      <div class="lock-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M7 10V8a5 5 0 0 1 10 0v2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <rect
+            x="5"
+            y="10"
+            width="14"
+            height="10"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <circle cx="12" cy="15" r="1.5" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="server-label">OAuth Demo Authorization Server</div>
+
+      <h1>Sign In</h1>
+
+      <p class="subtitle">Sign in to continue the authorization request.</p>
+
+      <!--
+            Brady / Role 1 can connect this form
+            to the real authentication process later.
+        -->
+      <form method="POST" action="/login">
+        <div class="field">
+          <label for="email">Email</label>
+
+          <div class="input-with-icon">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M4 6h16v12H4z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="m4 7 8 6 8-6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="demo@example.com"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+
+          <div class="input-with-icon">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect
+                  x="5"
+                  y="10"
+                  width="14"
+                  height="10"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M8 10V7a4 4 0 0 1 8 0v3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+        </div>
+
+        <button type="submit">Sign In</button>
+      </form>
+    </main>
+  </body>
+</html>
