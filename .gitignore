@@ -146,3 +146,6 @@ vite.config.ts.timestamp-*
 *.db
 *.db-shm
 *.db-wal
+
+# Node dependencies
+node_modules/
