@@ -36,25 +36,25 @@ The person assigned to a section is responsible for making sure that section wor
 Team members can still help each other across sections.
 
 - [ ] **Role 1 — OAuth Authorization Server Core**  
-  Owner: ______________________
+  Owner: **Brady McManus**
 
 - [ ] **Role 2 — Database, Users & OAuth Client Management**  
-  Owner: _AJ Flower_
+  Owner: **AJ Flower**
 
 - [ ] **Role 3 — Legitimate Client Application & Frontend**  
-  Owner: __Antonio Wright____________________
+  Owner: **Antonio Wright**
 
 - [ ] **Role 4 — OAuth Device Authorization Flow**  
-  Owner: ________AJ Kozina______
+  Owner: **AJ Kozina**
 
 - [ ] **Role 5 — Security / Phishing Demonstration & Testing**  
-  Owner: ________Sam Smith______________
+  Owner: **Sam Smith**
 
 ---
 
 # 1. OAuth Authorization Server Core
 
-**Owner:** ______________________
+**Owner:** **Brady McManus**
 
 This person will focus on the main OAuth server and authorization-code flow.
 
@@ -86,14 +86,14 @@ This person will manage the data required by the authorization server.
 
 ## Tasks
 
-- [ ] Choose database system
-- [ ] Set up database connection
-- [ ] Create users table
-- [ ] Create OAuth clients table
-- [ ] Create authorization codes table
-- [ ] Create access tokens table
-- [ ] Create consent records table
-- [ ] Create device codes table
+- [x] Choose database system
+- [x] Set up database connection
+- [x] Create users table
+- [x] Create OAuth clients table
+- [x] Create authorization codes table
+- [x] Create access tokens table
+- [x] Create consent records table
+- [x] Create device codes table
 - [ ] Store registered client IDs
 - [ ] Store approved redirect URIs
 - [ ] Store OAuth scopes
@@ -117,33 +117,35 @@ PostgreSQL if we decide to deploy
 
 # 3. Legitimate Client Application & Frontend
 
-**Owner:** ______________________
+**Owner:** **Antonio Wright**
 
 This person will create the normal application that uses the OAuth server correctly.
 
 ## Tasks
 
-- [ ] Create legitimate client application
-- [ ] Create frontend
-- [ ] Add "Connect Account" or "Sign In" button
-- [ ] Redirect user to OAuth `/authorize`
-- [ ] Send client ID
-- [ ] Send redirect URI
-- [ ] Send requested scopes
-- [ ] Create OAuth callback route
-- [ ] Receive authorization code
+- [x] Create legitimate client application
+- [x] Create frontend
+- [x] Add "Connect Account" or "Sign In" button
+- [x] Redirect user to OAuth `/authorize`
+- [x] Send client ID
+- [x] Send redirect URI
+- [x] Send requested scopes
+- [x] Create OAuth callback route
+- [x] Receive authorization code
 - [ ] Exchange authorization code for access token
 - [ ] Store token safely for the demo
 - [ ] Call `/userinfo`
 - [ ] Display returned user information
-- [ ] Create login page UI
+- [x] Create login page UI
 - [ ] Create consent page UI
-- [ ] Make frontend visually consistent
+- [x] Make frontend visually consistent
 
-Possible future integration:
+### Current role 3 progress
+
+The Activito client has been added under
 
 ```text
-Activito Demo Client
+clients/activito-demo-client/
 ```
 
 The existing production Activito project should not be changed until the standalone OAuth system works.
@@ -395,14 +397,14 @@ We should not try to build everything at once.
 
 ## Phase 1 — Basic Server
 
-- [ ] Node/Express project runs
+- [x] Node/Express project runs
 - [ ] Database connects
 - [ ] Test users exist
-- [ ] Test OAuth client exists
+- [x] Test OAuth client exists
 
 ## Phase 2 — Normal OAuth
 
-- [ ] `/authorize`
+- [x] `/authorize`
 - [ ] Login
 - [ ] Consent
 - [ ] Authorization code
@@ -412,8 +414,8 @@ We should not try to build everything at once.
 
 ## Phase 3 — Legitimate Client
 
-- [ ] Client redirects correctly
-- [ ] OAuth callback works
+- [x] Client redirects correctly
+- [x] OAuth callback works
 - [ ] Token exchange works
 - [ ] Protected data can be accessed
 
@@ -461,22 +463,41 @@ We should not try to build everything at once.
 
 # Current Status
 
-**Phase:** Planning / Initial Development
+**Phase:** Initial OAuth Implementation
 
-### First Milestone
+### Working Now
 
-Get this working locally:
+- Node.js / Express authorization server runs locally
+- Activito legitimate OAuth demo client is integrated
+- OAuth demo sign-in button is connected
+- Client can begin the authorization flow
+- `/authorize` receives and validates client information
+- Registered test client is configured
+- Redirect URI validation works
+- Scope validation works
+- OAuth callback page is implemented
+- Callback page can receive and read an authorization code
+- Repository structure has been cleaned for easier cloning and collaboration
+
+### Next Milestone
+
+Complete the full authorization-code flow:
 
 ```text
-Client
-  → /authorize
-  → login
-  → consent
-  → authorization code
-  → /token
-  → access token
-  → /userinfo
-```
-
-Once this works, then our group will have the foundation needed for the device-code flow and security demonstrations.
-
+Activito Client
+      ↓
+/authorize
+      ↓
+Login
+      ↓
+Consent
+      ↓
+Authorization Code
+      ↓
+Activito Callback
+      ↓
+/token
+      ↓
+Access Token
+      ↓
+/userinfo

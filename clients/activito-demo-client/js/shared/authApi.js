@@ -149,6 +149,31 @@ async function signInWithGoogle(callbackPath = "dashboard.html") {
 
 	window.location.href = data.url;
 }
+// Kicks off the OAuth redirect for the demo OAuth server. The flow is
+// similar to Google, but the demo server is a separate origin and doesn't
+// require the canonical-host hop.	
+async function signInWithOAuthDemo(callbackPath = "dashboard.html") {
+	const callbackURL = new URL(callbackPath, window.location.href).href;
+    // The demo server is a separate origin, so we don't need to check for
+	// canonical host like we do for Google. We just call the demo server's
+	// sign-in endpoint directly.	
+	const res = await fetch(`${OAUTH_DEMO_BASE}/api/auth/sign-in/oauth-demo`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+		body: JSON.stringify({ callbackURL }),
+	});
+
+	const data = await res.json().catch(() => null);
+
+	if (!res.ok || !data?.url) {
+		throw new Error(
+			data?.message || "OAuth demo sign-in isn't available right now.",
+		);
+	}
+
+	window.location.href = data.url;
+}
 
 async function signOutUser() {
 	const res = await fetch(`${API_BASE}/api/auth/sign-out`, {

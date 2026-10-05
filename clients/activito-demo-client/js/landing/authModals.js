@@ -177,6 +177,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// ── Sign in ───────────────────────────────────────────────
 	const signinForm = document.getElementById("signinForm");
+	const oauthDemoBtn = document.getElementById("oauth-demo-btn");
+
+	oauthDemoBtn?.addEventListener("click", async () => {
+		oauthDemoBtn.disabled = true;
+
+		try {
+			await signInWithOAuthDemo();
+		} catch (err) {
+			console.error("OAuth demo sign-in failed:", err);
+			showToast(err.message || "OAuth demo sign-in failed.", "error");
+			oauthDemoBtn.disabled = false;
+		}
+	});
 
 	signinForm?.addEventListener("submit", async (e) => {
 		e.preventDefault();
