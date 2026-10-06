@@ -60,10 +60,10 @@ This person will focus on the main OAuth server and authorization-code flow.
 
 ## Tasks
 
-- [ ] Create Node.js project
-- [ ] Install and configure Express
-- [ ] Create main server
-- [ ] Create `/authorize` endpoint
+- [x] Create Node.js project
+- [x] Install and configure Express
+- [x] Create main server
+- [x] Create `/authorize` endpoint
 - [ ] Create login process
 - [ ] Create consent process
 - [ ] Generate authorization codes
