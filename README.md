@@ -137,7 +137,7 @@ This person will create the normal application that uses the OAuth server correc
 - [ ] Call `/userinfo`
 - [ ] Display returned user information
 - [x] Create login page UI
-- [ ] Create consent page UI
+- [x] Create consent page UI
 - [x] Make frontend visually consistent
 
 ### Current role 3 progress
