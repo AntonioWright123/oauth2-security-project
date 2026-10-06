@@ -69,7 +69,7 @@ app.get("/authorize", (req, res) => {
   }
 
   // If all checks pass, continue to login/consent.
-  res.send("Client is allowed. Ready for login/consent.");
+  res.redirect("/login");
 });
 
 // Starts the OAuth demo flow
@@ -88,6 +88,10 @@ app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
   res.json({
     url: authorizeUrl.href,
   });
+});
+
+app.post("/login", (req, res) => {
+  res.redirect("/consent");
 });
 
 // Start the server.
