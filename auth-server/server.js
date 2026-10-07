@@ -56,6 +56,16 @@ app.get("/login", (req, res) => {
   `);
 });
 
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).send("Username and password are required.");
+  }
+
+  res.send(`Login submitted for ${username}`);
+});
+
 // OAuth authorization endpoint.
 // Our client (Activito) sends its ID, redirect URI, and requested scope here.
 app.get("/authorize", (req, res) => {
