@@ -35,8 +35,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  const { client_id, redirect_uri, scope } = req.query;
+
   res.send(`
     <form method="POST" action="/login">
+      <input type="hidden" name="client_id" value="${client_id}">
+      <input type="hidden" name="redirect_uri" value="${redirect_uri}">
+      <input type="hidden" name="scope" value="${scope}">
       <label>
         Username:
         <input type="text" name="username">
@@ -57,13 +62,13 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, client_id, redirect_uri, scope } = req.body;
 
   if (!username || !password) {
     return res.status(400).send("Username and password are required.");
   }
 
-  res.send(`Login submitted for ${username}`);
+  res.send(`Login submitted for ${username}. OAuth request preserved for ${client_id}.`);
 });
 
 // OAuth authorization endpoint.
