@@ -71,6 +71,10 @@ app.post("/login", (req, res) => {
   res.send(`Login submitted for ${username}. OAuth request preserved for ${client_id}.`);
 });
 
+app.get("/consent", (req, res) => {
+  res.send("Consent page");
+});
+
 // OAuth authorization endpoint.
 // Our client (Activito) sends its ID, redirect URI, and requested scope here.
 app.get("/authorize", (req, res) => {
