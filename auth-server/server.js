@@ -17,6 +17,9 @@ app.use(cors({
 // Lets Express read JSON from POST requests
 app.use(express.json());
 
+// Lets Express read form submissions
+app.use(express.urlencoded({ extended: false }));
+
 // Temporary list of registered OAuth clients.
 // will come from the database later.
 const clients = {
