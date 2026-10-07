@@ -91,7 +91,7 @@ app.get("/authorize", (req, res) => {
   }
 
   // If all checks pass, continue to login/consent.
-  res.send("Client is allowed. Ready for login/consent.");
+  res.redirect("/login");
 });
 
 // Starts the OAuth demo flow
