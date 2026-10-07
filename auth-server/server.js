@@ -91,7 +91,13 @@ app.get("/authorize", (req, res) => {
   }
 
   // If all checks pass, continue to login/consent.
-  res.redirect("/login");
+  const loginParams = new URLSearchParams({
+  client_id,
+  redirect_uri,
+  scope
+});
+
+res.redirect(`/login?${loginParams.toString()}`);
 });
 
 // Starts the OAuth demo flow
