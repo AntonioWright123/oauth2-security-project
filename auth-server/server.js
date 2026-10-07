@@ -68,7 +68,14 @@ app.post("/login", (req, res) => {
     return res.status(400).send("Username and password are required.");
   }
 
-  res.send(`Login submitted for ${username}. OAuth request preserved for ${client_id}.`);
+  const consentParams = new URLSearchParams({
+  client_id,
+  redirect_uri,
+  scope,
+  username
+});
+
+res.redirect(`/consent?${consentParams.toString()}`);
 });
 
 app.get("/consent", (req, res) => {
