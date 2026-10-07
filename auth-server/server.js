@@ -34,6 +34,10 @@ app.get("/", (req, res) => {
   res.send("Auth server is running");
 });
 
+app.get("/login", (req, res) => {
+  res.send("Login page");
+});
+
 // OAuth authorization endpoint.
 // Our client (Activito) sends its ID, redirect URI, and requested scope here.
 app.get("/authorize", (req, res) => {
