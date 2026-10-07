@@ -79,7 +79,24 @@ res.redirect(`/consent?${consentParams.toString()}`);
 });
 
 app.get("/consent", (req, res) => {
-  res.send("Consent page");
+  const { client_id, redirect_uri, scope, username } = req.query;
+
+  res.send(`
+    <h2>Authorize Application</h2>
+
+    <p>${client_id} is requesting access to:</p>
+    <p>${scope}</p>
+
+    <form method="POST" action="/consent">
+      <input type="hidden" name="client_id" value="${client_id}">
+      <input type="hidden" name="redirect_uri" value="${redirect_uri}">
+      <input type="hidden" name="scope" value="${scope}">
+      <input type="hidden" name="username" value="${username}">
+
+      <button type="submit" name="decision" value="approve">Approve</button>
+      <button type="submit" name="decision" value="deny">Deny</button>
+    </form>
+  `);
 });
 
 // OAuth authorization endpoint.
