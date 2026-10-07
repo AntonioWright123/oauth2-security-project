@@ -35,7 +35,25 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.send("Login page");
+  res.send(`
+    <form method="POST" action="/login">
+      <label>
+        Username:
+        <input type="text" name="username">
+      </label>
+
+      <br>
+
+      <label>
+        Password:
+        <input type="password" name="password">
+      </label>
+
+      <br>
+
+      <button type="submit">Log in</button>
+    </form>
+  `);
 });
 
 // OAuth authorization endpoint.
