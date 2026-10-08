@@ -5,30 +5,43 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-
-
-
 // Allow CORS from the demo client origin.
-app.use(cors({
+app.use(
+  cors({
     origin: "http://127.0.0.1:5500",
-    credentials: true
-}));
+    credentials: true,
+  }),
+);
 
 // Lets Express read JSON from POST requests
 app.use(express.json());
+
+// Serve static files from the "public" directory.
+const path = require("path");
+
+app.use(express.static("public"));
+
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "login.html"));
+});
 
 // Temporary list of registered OAuth clients.
 // will come from the database later.
 const clients = {
   "activito-client": {
-    redirect_uri: "http://127.0.0.1:5500/clients/activito-demo-client/callback.html",
-    scopes: ["profile"]
-  }
+    redirect_uri:
+      "http://127.0.0.1:5500/clients/activito-demo-client/callback.html",
+    scopes: ["profile"],
+  },
 };
 
 // Test endpoint
 app.get("/", (req, res) => {
   res.send("Auth server is running");
+});
+
+app.get("/consent", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "consent.html"));
 });
 
 // OAuth authorization endpoint.
@@ -56,27 +69,30 @@ app.get("/authorize", (req, res) => {
   }
 
   // If all checks pass, continue to login/consent.
-  res.send("Client is allowed. Ready for login/consent.");
+  res.redirect("/login");
 });
 
 // Starts the OAuth demo flow
 app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
-    const { callbackURL } = req.body;
+  const { callbackURL } = req.body;
 
-    const authorizeUrl = new URL("http://localhost:4000/authorize");
+  const authorizeUrl = new URL("http://localhost:4000/authorize");
 
-    authorizeUrl.searchParams.set("client_id", "activito-client");
-    authorizeUrl.searchParams.set(
-        "redirect_uri",
-        "http://127.0.0.1:5500/clients/activito-demo-client/callback.html"
-    );
-    authorizeUrl.searchParams.set("scope", "profile");
+  authorizeUrl.searchParams.set("client_id", "activito-client");
+  authorizeUrl.searchParams.set(
+    "redirect_uri",
+    "http://127.0.0.1:5500/clients/activito-demo-client/callback.html",
+  );
+  authorizeUrl.searchParams.set("scope", "profile");
 
-    res.json({
-        url: authorizeUrl.href
-    });
+  res.json({
+    url: authorizeUrl.href,
+  });
 });
 
+app.post("/login", (req, res) => {
+  res.redirect("/consent");
+});
 
 // Start the server.
 app.listen(PORT, () => {

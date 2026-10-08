@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OAuth Demo - Consent</title>
+
+    <link rel="stylesheet" href="/css/auth-server.css" />
+  </head>
+
+  <body>
+    <main class="login-card">
+      <div class="lock-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M7 10V8a5 5 0 0 1 10 0v2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <rect
+            x="5"
+            y="10"
+            width="14"
+            height="10"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <div class="server-label">OAuth 2.0 Authorization</div>
+
+      <h1>Authorize Application</h1>
+
+      <p class="subtitle">Activito is requesting access to your account.</p>
+
+      <div class="client-card">
+        <div class="client-app">
+          <!-- Activito app icon -->
+          <div class="client-app-icon">
+            <img src="/images/activitoA.svg" alt="Activito app icon" />
+          </div>
+
+          <!-- Activito identity -->
+          <div class="client-app-info">
+            <img src="/images/activitoLogo.svg" alt="Activito" />
+
+            <span class="client-domain"> activito.com </span>
+            <span class="client-domain"> On the go activities </span>
+          </div>
+        </div>
+
+        <div class="verified-client">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M9 12l2 2 4-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+
+          Registered OAuth client
+        </div>
+      </div>
+
+      <div class="permission-section">
+        <h3>This application wants permission to:</h3>
+
+        <div class="permission-item">
+          <span class="permission-check">✓</span>
+
+          <div>
+            <strong>View your basic profile</strong>
+            <p>Access your name and basic account information.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role 1 will connect these buttons to the real consent process -->
+      <form method="POST" action="/consent">
+        <div class="consent-actions">
+          <button
+            type="submit"
+            name="decision"
+            value="deny"
+            class="deny-button"
+          >
+            Deny
+          </button>
+
+          <button
+            type="submit"
+            name="decision"
+            value="allow"
+            class="allow-button"
+          >
+            Allow
+          </button>
+        </div>
+      </form>
+
+      <div class="demo-note">
+        Only approve applications you recognize and trust.
+      </div>
+    </main>
+  </body>
+</html>
