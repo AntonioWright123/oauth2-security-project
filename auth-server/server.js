@@ -93,6 +93,11 @@ app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
 app.post("/login", (req, res) => {
   res.redirect("/consent");
 });
+////////////////////ADDED LINES IN THIS BRANCH
+//device auth flow
+const { router: deviceRouter } = require("./device-flow/deviceRoutes");
+app.use(deviceRouter);
+//////////////////////////////
 
 // Start the server.
 app.listen(PORT, () => {
