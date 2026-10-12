@@ -93,7 +93,7 @@
       </div>
 
       <!-- Role 1 will connect these buttons to the real consent process -->
-      <form method="POST" action="/consent">
+      <form id="consent-form" method="POST" action="/consent">
         <div class="consent-actions">
           <button
             type="submit"
@@ -119,5 +119,10 @@
         Only approve applications you recognize and trust.
       </div>
     </main>
+
+    <script>
+      const form = document.getElementById("consent-form");
+      form.action = `/consent${window.location.search}`;
+    </script>
   </body>
 </html>

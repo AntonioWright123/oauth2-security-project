@@ -1,6 +1,7 @@
 // auth server.js
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -16,17 +17,14 @@ app.use(
 // Lets Express read JSON from POST requests
 app.use(express.json());
 
-// Serve static files from the "public" directory.
-const path = require("path");
+// Lets Express read normal HTML form submissions
+app.use(express.urlencoded({ extended: false }));
 
+// Serve static files from public
 app.use(express.static("public"));
 
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "login.html"));
-});
-
 // Temporary list of registered OAuth clients.
-// will come from the database later.
+// Will come from the database later.
 const clients = {
   "activito-client": {
     redirect_uri:
@@ -40,42 +38,76 @@ app.get("/", (req, res) => {
   res.send("Auth server is running");
 });
 
+// Show styled login page
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "login.html"));
+});
+
+// Process login
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  const { client_id, redirect_uri, scope } = req.query;
+
+  if (!email || !password) {
+    return res.status(400).send("Email and password are required.");
+  }
+
+  const consentParams = new URLSearchParams({
+    client_id,
+    redirect_uri,
+    scope,
+    email,
+  });
+
+  res.redirect(`/consent?${consentParams.toString()}`);
+});
+
+// Show styled consent page
 app.get("/consent", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "consent.html"));
 });
 
-// OAuth authorization endpoint.
-// Our client (Activito) sends its ID, redirect URI, and requested scope here.
+app.post("/consent", (req, res) => {
+  const { decision } = req.body;
+  const { client_id, redirect_uri, scope, email } = req.query;
+
+  if (decision === "allow") {
+    return res.redirect(`${redirect_uri}?code=test123`);
+  }
+
+  return res.redirect(`${redirect_uri}?error=access_denied`);
+});
+
+// OAuth authorization endpoint
 app.get("/authorize", (req, res) => {
   const { client_id, redirect_uri, scope } = req.query;
 
-  // Look up the client using the client_id.
   const client = clients[client_id];
 
-  // Reject the request if the client is not registered.
   if (!client) {
     return res.status(400).send("Invalid client_id");
   }
 
-  // Make sure the redirect URI matches the one registered for this client.
-  // This helps prevent authorization codes from being sent to the wrong site.
   if (redirect_uri !== client.redirect_uri) {
     return res.status(400).send("Invalid redirect_uri");
   }
 
-  // Make sure the client is allowed to request this scope.
   if (!client.scopes.includes(scope)) {
     return res.status(400).send("Invalid scope");
   }
 
-  // If all checks pass, continue to login/consent.
-  res.redirect("/login");
+  // Preserve OAuth information when going to login.
+  const loginParams = new URLSearchParams({
+    client_id,
+    redirect_uri,
+    scope,
+  });
+
+  res.redirect(`/login?${loginParams.toString()}`);
 });
 
 // Starts the OAuth demo flow
 app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
-  const { callbackURL } = req.body;
-
   const authorizeUrl = new URL("http://localhost:4000/authorize");
 
   authorizeUrl.searchParams.set("client_id", "activito-client");
@@ -90,11 +122,7 @@ app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
-  res.redirect("/consent");
-});
-
-// Start the server.
+// Start the server
 app.listen(PORT, () => {
   console.log(`Auth server is running on port ${PORT}`);
 });

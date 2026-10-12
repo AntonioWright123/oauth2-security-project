@@ -43,7 +43,7 @@
             Brady / Role 1 can connect this form
             to the real authentication process later.
         -->
-      <form method="POST" action="/login">
+      <form id="login-form" method="POST" action="/login">
         <div class="field">
           <label for="email">Email</label>
 
@@ -117,5 +117,10 @@
         <button type="submit">Sign In</button>
       </form>
     </main>
+
+    <script>
+      const form = document.getElementById("login-form");
+      form.action = `/login${window.location.search}`;
+    </script>
   </body>
 </html>
