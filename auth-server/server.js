@@ -122,6 +122,10 @@ app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
   });
 });
 
+// Device authorization flow
+const { router: deviceRouter } = require("./device-flow/deviceRoutes");
+app.use(deviceRouter);
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Auth server is running on port ${PORT}`);
