@@ -123,7 +123,7 @@ app.post("/api/auth/sign-in/oauth-demo", (req, res) => {
 });
 
 // Device authorization flow
-const { router: deviceRouter } = require("./device-flow/deviceRoutes");
+const { router: deviceRouter } = require("./device-flow/device-Routes");
 app.use(deviceRouter);
 
 // Start the server

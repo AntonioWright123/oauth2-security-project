@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS oauth_clients (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table for storing access tokens
+-- Table for storing authorization codes
 CREATE TABLE IF NOT EXISTS authorization_codes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     code TEXT NOT NULL UNIQUE,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS authorization_codes (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Table for storing access tokens
+-- Table for storing authorization tokens
 CREATE TABLE IF NOT EXISTS access_tokens (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     token TEXT NOT NULL UNIQUE,
