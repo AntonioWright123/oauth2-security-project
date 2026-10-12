@@ -207,16 +207,16 @@ This person will build the controlled security demonstrations and test the compl
 
 ## Consent Phishing Demo
 
-- [ ] Create separate security-demo OAuth client
+- [x] Create separate security-demo OAuth client
 - [ ] Register separate client ID
 - [ ] Create controlled misleading application scenario
-- [ ] Request OAuth scopes
-- [ ] Redirect user to legitimate OAuth server
-- [ ] Display consent screen
+- [x] Request OAuth scopes
+- [x] Redirect user to legitimate OAuth server
+- [x] Display consent screen
 - [ ] Demonstrate user approving wrong client
 - [ ] Show token being issued to demo client
 - [ ] Demonstrate what approved scopes allow
-- [ ] Clearly label demo as educational/test environment
+- [x] Clearly label demo as educational/test environment
 
 ## Device-Code Phishing Demo
 
@@ -233,10 +233,10 @@ This person will build the controlled security demonstrations and test the compl
 ## Testing
 
 - [ ] Test successful authorization
-- [ ] Test denied consent
-- [ ] Test invalid client ID
-- [ ] Test invalid redirect URI
-- [ ] Test invalid scope
+- [x] Test denied consent
+- [x] Test invalid client ID
+- [x] Test invalid redirect URI
+- [x] Test invalid scope
 - [ ] Test expired authorization code
 - [ ] Test reused authorization code
 - [ ] Test invalid access token
