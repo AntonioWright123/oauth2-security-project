@@ -337,78 +337,52 @@ This person will build the controlled security demonstrations and test the compl
 
 ## Consent Phishing Demo
 
-- [ ] Create separate security-demo OAuth client
-
+- [x] Create separate security-demo OAuth client
 - [ ] Register separate client ID
-
 - [ ] Create controlled misleading application scenario
-
-- [ ] Request OAuth scopes
-
-- [ ] Redirect user to legitimate OAuth server
-
-- [ ] Display consent screen
-
+- [x] Request OAuth scopes
+- [x] Redirect user to legitimate OAuth server
+- [x] Display consent screen
 - [ ] Demonstrate user approving wrong client
-
 - [ ] Show token being issued to demo client
-
 - [ ] Demonstrate what approved scopes allow
-
 - [x] Clearly label demo as educational/test environment
 
 ### Current role 5 progress
 
-A separate static security-demo client page has been created under clients/security-demo-client/. It currently includes the controlled-test disclaimer and the planned OAuth consent-security scenario. The connect button and actual OAuth/security-demo behavior are not connected yet.
+A separate security-demo client page has been created under `clients/security-demo-client/`.
+
+The Connect Test Account button now redirects to the legitimate OAuth authorization server and requests the `profile` scope. The consent screen can be displayed through the existing OAuth flow.
+
+The security demo currently reuses the `activito-client` client ID and Activito callback URL. A separate registered security-demo OAuth client, token issuance, and the complete misleading-consent demonstration are still in progress.
 
 ## Device-Code Phishing Demo
 
 - [ ] Start device authorization request
-
 - [ ] Generate test device code
-
 - [x] Generate user code
-
 - [ ] Create controlled social-engineering scenario
-
 - [ ] Have test user enter code
-
 - [ ] Have test user approve device
-
 - [ ] Demonstrate requesting device receiving token
-
 - [ ] Show why this is dangerous
-
 - [ ] Keep demo isolated from real accounts and systems
 
 ## Testing
 
 - [ ] Test successful authorization
-
-- [ ] Test denied consent
-
-- [ ] Test invalid client ID
-
-- [ ] Test invalid redirect URI
-
-- [ ] Test invalid scope
-
+- [x] Test denied consent
+- [x] Test invalid client ID
+- [x] Test invalid redirect URI
+- [x] Test invalid scope
 - [ ] Test expired authorization code
-
 - [ ] Test reused authorization code
-
 - [ ] Test invalid access token
-
 - [ ] Test expired access token
-
 - [x] Test device-code approval
-
 - [ ] Test device-code denial
-
 - [ ] Test expired device code
-
 - [ ] Test authorization pending response
-
 - [ ] Verify one client cannot use another client's authorization code
 
 ---
