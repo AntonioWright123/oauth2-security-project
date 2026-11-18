@@ -45,3 +45,6 @@ const tables = db.prepare(`
 
 console.log('Database tables:');
 console.table(tables);
+
+//**Export the database connection so other files can use it** */
+module.exports = db;

@@ -34,10 +34,10 @@ const insertClient = db.prepare(`
 `);
 // Run the insert statement with test client data
 insertClient.run(
-    'activito-demo',
+    'activito-client',
     'Activito Demo Client',
-    'http://localhost:3000/callback',
-    'profile email'
+    'http://127.0.0.1:5500/clients/activito-demo-client/callback.html',
+    'profile'
 );
 // Close the database connection
 console.log('Test user and OAuth client have been seeded into the database.');
