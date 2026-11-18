@@ -60,10 +60,10 @@ This person will focus on the main OAuth server and authorization-code flow.
 
 ## Tasks
 
-- [ ] Create Node.js project
-- [ ] Install and configure Express
-- [ ] Create main server
-- [ ] Create `/authorize` endpoint
+- [x] Create Node.js project
+- [x] Install and configure Express
+- [x] Create main server
+- [x] Create `/authorize` endpoint
 - [ ] Create login process
 - [ ] Create consent process
 - [ ] Generate authorization codes
@@ -137,7 +137,7 @@ This person will create the normal application that uses the OAuth server correc
 - [ ] Call `/userinfo`
 - [ ] Display returned user information
 - [x] Create login page UI
-- [ ] Create consent page UI
+- [x] Create consent page UI
 - [x] Make frontend visually consistent
 
 ### Current role 3 progress
@@ -160,22 +160,22 @@ This person will build the device-code portion of OAuth.
 
 ## Tasks
 
-- [ ] Create `/device_authorization` endpoint
-- [ ] Generate device code
-- [ ] Generate user code
-- [ ] Create verification URL
+- [x] Create `/device_authorization` endpoint
+- [x] Generate device code
+- [x] Generate user code
+- [x] Create verification URL
 - [ ] Create device verification page
 - [ ] Allow user to enter user code
 - [ ] Connect device request to user account
 - [ ] Create device consent screen
-- [ ] Implement device approval
-- [ ] Implement device denial
+- [x] Implement device approval
+- [x] Implement device denial
 - [ ] Implement token polling
-- [ ] Return `authorization_pending`
+- [x] Return `authorization_pending`
 - [ ] Issue access token after approval
-- [ ] Add device-code expiration
-- [ ] Handle invalid device codes
-- [ ] Handle expired device codes
+- [x] Add device-code expiration
+- [x] Handle invalid device codes
+- [x] Handle expired device codes
 
 Normal device flow:
 

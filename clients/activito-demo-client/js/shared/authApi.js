@@ -3,105 +3,105 @@
 //===================================
 
 async function signUpUser({ name, email, password, dateOfBirth }) {
-	const res = await fetch(`${API_BASE}/api/auth/sign-up/email`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		credentials: "include",
-		body: JSON.stringify({
-			name,
-			email,
-			password,
-			dateOfBirth,
-		}),
-	});
+  const res = await fetch(`${API_BASE}/api/auth/sign-up/email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+      dateOfBirth,
+    }),
+  });
 
-	const data = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
 
-	if (!res.ok) {
-		throw new Error(data?.message || data?.error || "Sign up failed");
-	}
+  if (!res.ok) {
+    throw new Error(data?.message || data?.error || "Sign up failed");
+  }
 
-	return data;
+  return data;
 }
 
 async function signInUser({ email, password }) {
-	const res = await fetch(`${API_BASE}/api/auth/sign-in/email`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		credentials: "include",
-		body: JSON.stringify({
-			email,
-			password,
-		}),
-	});
+  const res = await fetch(`${API_BASE}/api/auth/sign-in/email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
 
-	const data = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
 
-	if (!res.ok) {
-		throw new Error(data?.message || data?.error || "Sign in failed");
-	}
+  if (!res.ok) {
+    throw new Error(data?.message || data?.error || "Sign in failed");
+  }
 
-	return data;
+  return data;
 }
 
 async function getCurrentUser() {
-	const res = await fetch(`${API_BASE}/api/me`, {
-		method: "GET",
-		credentials: "include",
-	});
+  const res = await fetch(`${API_BASE}/api/me`, {
+    method: "GET",
+    credentials: "include",
+  });
 
-	if (!res.ok) return null;
+  if (!res.ok) return null;
 
-	return await res.json().catch(() => null);
+  return await res.json().catch(() => null);
 }
 
 async function requireCurrentUser() {
-	const session = await getCurrentUser();
+  const session = await getCurrentUser();
 
-	if (!session?.user) {
-		window.location.href = "../templates/index.html";
-		return null;
-	}
+  if (!session?.user) {
+    window.location.href = "../templates/index.html";
+    return null;
+  }
 
-	// After an OAuth redirect the session is valid but the cached
-	// profile is missing, because the sign-in form never ran.
-	if (!localStorage.getItem("activito_user")) {
-		cacheUserProfile(session.user);
-	}
+  // After an OAuth redirect the session is valid but the cached
+  // profile is missing, because the sign-in form never ran.
+  if (!localStorage.getItem("activito_user")) {
+    cacheUserProfile(session.user);
+  }
 
-	return session.user;
+  return session.user;
 }
 
 // Mirrors what the sign-in/sign-up forms store, so every entry path
 // leaves the same shape in localStorage.
 function cacheUserProfile(user) {
-	const displayName = user?.name || user?.email?.split("@")[0] || "User";
+  const displayName = user?.name || user?.email?.split("@")[0] || "User";
 
-	localStorage.setItem(
-		"activito_user",
-		JSON.stringify({
-			id: user?.id || null,
-			name: displayName,
-			email: user?.email || "",
-			initials: displayName.slice(0, 2).toUpperCase(),
-			avatar: user?.image || null,
-		}),
-	);
+  localStorage.setItem(
+    "activito_user",
+    JSON.stringify({
+      id: user?.id || null,
+      name: displayName,
+      email: user?.email || "",
+      initials: displayName.slice(0, 2).toUpperCase(),
+      avatar: user?.image || null,
+    }),
+  );
 }
 
 // Which social providers the backend actually has credentials for.
 async function fetchAuthConfig() {
-	try {
-		const res = await fetch(`${API_BASE}/api/auth-config`);
+  try {
+    const res = await fetch(`${API_BASE}/api/auth-config`);
 
-		return res.ok ? await res.json() : { google: false };
-	} catch {
-		return { google: false };
-	}
+    return res.ok ? await res.json() : { google: false };
+  } catch {
+    return { google: false };
+  }
 }
 
 // Kicks off the OAuth redirect. Google bounces the user back to
@@ -115,95 +115,119 @@ async function fetchAuthConfig() {
 // hostnames disagree, move the page onto the canonical one first and
 // resume automatically.
 async function signInWithGoogle(callbackPath = "dashboard.html") {
-	const config = await fetchAuthConfig();
-	const authHost = config.authOrigin
-		? new URL(config.authOrigin).hostname
-		: window.location.hostname;
+  const config = await fetchAuthConfig();
+  const authHost = config.authOrigin
+    ? new URL(config.authOrigin).hostname
+    : window.location.hostname;
 
-	if (authHost !== window.location.hostname) {
-		const target = new URL(window.location.href);
+  if (authHost !== window.location.hostname) {
+    const target = new URL(window.location.href);
 
-		target.hostname = authHost;
-		target.searchParams.set("continue", "google");
+    target.hostname = authHost;
+    target.searchParams.set("continue", "google");
 
-		window.location.href = target.href;
-		return;
-	}
+    window.location.href = target.href;
+    return;
+  }
 
-	const callbackURL = new URL(callbackPath, window.location.href).href;
+  const callbackURL = new URL(callbackPath, window.location.href).href;
 
-	const res = await fetch(`${API_BASE}/api/auth/sign-in/social`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		credentials: "include",
-		body: JSON.stringify({ provider: "google", callbackURL }),
-	});
+  const res = await fetch(`${API_BASE}/api/auth/sign-in/social`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ provider: "google", callbackURL }),
+  });
 
-	const data = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
 
-	if (!res.ok || !data?.url) {
-		throw new Error(
-			data?.message || "Google sign-in isn't available right now.",
-		);
-	}
+  if (!res.ok || !data?.url) {
+    throw new Error(
+      data?.message || "Google sign-in isn't available right now.",
+    );
+  }
 
-	window.location.href = data.url;
+  window.location.href = data.url;
 }
 // Kicks off the OAuth redirect for the demo OAuth server. The flow is
 // similar to Google, but the demo server is a separate origin and doesn't
-// require the canonical-host hop.	
+// require the canonical-host hop.
 async function signInWithOAuthDemo(callbackPath = "dashboard.html") {
-	const callbackURL = new URL(callbackPath, window.location.href).href;
-    // The demo server is a separate origin, so we don't need to check for
-	// canonical host like we do for Google. We just call the demo server's
-	// sign-in endpoint directly.	
-	const res = await fetch(`${OAUTH_DEMO_BASE}/api/auth/sign-in/oauth-demo`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		credentials: "include",
-		body: JSON.stringify({ callbackURL }),
-	});
+  const callbackURL = new URL(callbackPath, window.location.href).href;
+  // The demo server is a separate origin, so we don't need to check for
+  // canonical host like we do for Google. We just call the demo server's
+  // sign-in endpoint directly.
+  const res = await fetch(`${OAUTH_DEMO_BASE}/api/auth/sign-in/oauth-demo`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ callbackURL }),
+  });
 
-	const data = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
 
-	if (!res.ok || !data?.url) {
-		throw new Error(
-			data?.message || "OAuth demo sign-in isn't available right now.",
-		);
-	}
+  if (!res.ok || !data?.url) {
+    throw new Error(
+      data?.message || "OAuth demo sign-in isn't available right now.",
+    );
+  }
 
-	window.location.href = data.url;
+  window.location.href = data.url;
+}
+// Exchanges the authorization code for an access token. The demo server
+// returns a JSON object with the token and user profile, which we cache
+// in localStorage for the demo. In a real app, the server would set a
+// session cookie and the client wouldn't need to store the token.
+async function exchangeOAuthCode(code) {
+  const res = await fetch(`${OAUTH_DEMO_BASE}/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      code,
+      client_id: "activito-client",
+    }),
+  });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Token exchange failed.");
+  }
+
+  return data;
 }
 
 async function signOutUser() {
-	const res = await fetch(`${API_BASE}/api/auth/sign-out`, {
-		method: "POST",
-		credentials: "include",
-	});
+  const res = await fetch(`${API_BASE}/api/auth/sign-out`, {
+    method: "POST",
+    credentials: "include",
+  });
 
-	if (!res.ok) {
-		throw new Error("Sign out failed");
-	}
+  if (!res.ok) {
+    throw new Error("Sign out failed");
+  }
 
-	clearUserLocalState();
+  clearUserLocalState();
 
-	window.location.href = "../templates/index.html";
+  window.location.href = "../templates/index.html";
 }
 
 function clearUserLocalState() {
-	localStorage.removeItem("activito_user");
-	localStorage.removeItem("activito_token");
+  localStorage.removeItem("activito_user");
+  localStorage.removeItem("activito_token");
 
-	localStorage.removeItem("activito_coords");
-	localStorage.removeItem("activito_manual_coords");
-	localStorage.removeItem("activito_location_label");
-	localStorage.removeItem("activito_location_source");
-	//saved  might throw of saved spots
-	localStorage.removeItem("activito_saved");
-	localStorage.removeItem("activito_vibe");
-	localStorage.removeItem("activito_vibes_taken");
-	localStorage.removeItem("activito_gps_coords");
-	localStorage.removeItem("activito_daily_spins");
+  localStorage.removeItem("activito_coords");
+  localStorage.removeItem("activito_manual_coords");
+  localStorage.removeItem("activito_location_label");
+  localStorage.removeItem("activito_location_source");
+  //saved  might throw of saved spots
+  localStorage.removeItem("activito_saved");
+  localStorage.removeItem("activito_vibe");
+  localStorage.removeItem("activito_vibes_taken");
+  localStorage.removeItem("activito_gps_coords");
+  localStorage.removeItem("activito_daily_spins");
 }
 
 // ── Declarative trigger ──────────────────────────────────────
@@ -211,11 +235,11 @@ function clearUserLocalState() {
 // signOutUser();". Inline handlers resolve against the global object and
 // would break once this file is a module — see docs/module-migration.md.
 document.addEventListener("click", (event) => {
-	const trigger = event.target.closest("[data-signout]");
+  const trigger = event.target.closest("[data-signout]");
 
-	if (!trigger) return;
+  if (!trigger) return;
 
-	// Several of these are <a href="#">, which would jump the page.
-	event.preventDefault();
-	signOutUser();
+  // Several of these are <a href="#">, which would jump the page.
+  event.preventDefault();
+  signOutUser();
 });

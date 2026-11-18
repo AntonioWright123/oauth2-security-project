@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 424 144" role="img" aria-label="Activito">
+  <defs>
+    <linearGradient id="activitoBrand" x1="0" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- motion trails -->
+  <g stroke="url(#activitoBrand)" stroke-width="8" stroke-linecap="round" opacity="0.75">
+    <path d="M6 52h22"/><path d="M2 78h30"/><path d="M8 104h20"/>
+  </g>
+
+  <!-- the A, leaning into the direction of travel -->
+  <g transform="skewX(-11) translate(16 0)">
+    <path fill="url(#activitoBrand)" fill-rule="evenodd"
+          d="M56 16 96 128H78l-8-24H42l-8 24H16Zm-8 68h16l-8-26z"/>
+  </g>
+
+  <!-- "ctivito" drawn as rounded strokes, so no webfont is required.
+       Skewed 4deg to travel with the mark. -->
+  <g transform="skewX(-4) translate(-26 0)" fill="none" stroke="#ffffff"
+     stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M177 75a29 29 0 1 0 0 48"/>
+    <path d="M212 48v70q0 10 12 10"/><path d="M196 74h34"/>
+    <path d="M250 76v52"/>
+    <path d="M272 70l20 58 20-58"/>
+    <path d="M332 76v52"/>
+    <path d="M356 48v70q0 10 12 10"/><path d="M340 74h34"/>
+    <circle cx="410" cy="99" r="29"/>
+  </g>
+  <g transform="skewX(-4) translate(-26 0)" fill="#ffffff">
+    <circle cx="250" cy="52" r="8"/><circle cx="332" cy="52" r="8"/>
+  </g>
+</svg>
